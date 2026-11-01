@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2b2a5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Miqka">
+<meta name="format-detection" content="telephone=no">
+<title>Titre du jeu</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app" class="on-title">
+
+  <!-- ===== SCÈNE (décor + sprite) ===== -->
+  <div class="stage" id="stage">
+    <div class="bg" id="bgA"></div><div class="bg" id="bgB"></div>
+    <div class="sprite-wrap"><img class="sprite" id="spA" alt=""><img class="sprite" id="spB" alt=""></div>
+    <div class="vignette"></div>
+  </div>
+
+  <!-- ===== INTERFACE DE JEU ===== -->
+  <div class="hud" id="hud">
+    <div class="topbar">
+      <div class="chap" id="chap"></div>
+      <button class="iconbtn eye" id="btnEye" aria-label="Masquer l'interface"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
+    <div class="lower">
+      <div class="choices" id="choices"></div>
+      <div class="box" id="box">
+        <div class="name" id="name">Miqka</div>
+        <div class="txt" id="txt"></div>
+        <div class="next" id="next"></div>
+      </div>
+    </div>
+    <nav class="bar" id="bar">
+      <button class="ctl" id="btnAuto"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg><span>Auto</span></button>
+      <button class="ctl" id="btnSkip"><svg viewBox="0 0 24 24"><path d="M3 5v14l9-7zM12 5v14l9-7z" fill="currentColor"/></svg><span>Passer</span></button>
+      <button class="ctl" id="btnLog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h9"/></svg><span>Historique</span></button>
+      <button class="ctl" id="btnSave"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M5 3.5h11l3.5 3.5v13.5h-14.5z"/><path d="M8 3.5v5h8v-5M8 20.5v-6h8v6"/></svg><span>Sauvegarder</span></button>
+      <button class="ctl" id="btnMenu"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2.3"/><circle cx="12" cy="12" r="2.3"/><circle cx="19" cy="12" r="2.3"/></svg><span>Menu</span></button>
+    </nav>
+  </div>
+
+  <!-- ===== CARTE DE CHAPITRE ===== -->
+  <div class="chapcard" id="chapcard"><div class="cc-k" id="ccK"></div><div class="cc-t" id="ccT"></div></div>
+
+  <!-- ===== ÉCRAN TITRE ===== -->
+  <section class="title" id="title">
+    <div class="t-head">
+      <div class="t-kicker">Un visual novel</div>
+      <h1 id="gameTitle">TITRE DU JEU</h1>
+      <div class="t-sub" id="gameSub">Sous-titre d'exemple</div>
+    </div>
+    <img class="t-sprite" src="assets/sprites/excited.png" alt="">
+    <div class="t-menu">
+      <button class="pill primary" id="tNew">Nouvelle partie</button>
+      <button class="pill" id="tCont">Continuer</button>
+      <button class="pill" id="tLoad">Chargement</button>
+      <button class="pill" id="tSet">Réglages</button>
+    </div>
+    <div class="t-ver">v0.1 · démo de l'interface</div>
+  </section>
+
+  <!-- ===== FEUILLES (sheets) ===== -->
+  <div class="sheet-wrap" id="shLog"><div class="backdrop"></div><div class="sheet tall">
+    <div class="grab"></div><header><h2>Historique</h2><button class="iconbtn close" aria-label="Fermer">✕</button></header>
+    <div class="sheet-body" id="logBody"></div></div></div>
+
+  <div class="sheet-wrap" id="shSaves"><div class="backdrop"></div><div class="sheet tall">
+    <div class="grab"></div><header><h2 id="savesTitle">Sauvegarder</h2><button class="iconbtn close" aria-label="Fermer">✕</button></header>
+    <div class="seg" id="savesSeg"><button data-m="save">Sauvegarder</button><button data-m="load">Charger</button></div>
+    <div class="sheet-body"><div class="slots" id="slots"></div></div></div></div>
+
+  <div class="sheet-wrap" id="shMenu"><div class="backdrop"></div><div class="sheet">
+    <div class="grab"></div><header><h2>Pause</h2><button class="iconbtn close" aria-label="Fermer">✕</button></header>
+    <div class="sheet-body menu-list">
+      <button class="pill primary" data-act="resume">Reprendre</button>
+      <button class="pill" data-act="save">Sauvegarder</button>
+      <button class="pill" data-act="load">Charger</button>
+      <button class="pill" data-act="settings">Réglages</button>
+      <button class="pill ghost" data-act="title">Retour au titre</button>
+    </div></div></div>
+
+  <div class="sheet-wrap" id="shSet"><div class="backdrop"></div><div class="sheet tall">
+    <div class="grab"></div><header><h2>Réglages</h2><button class="iconbtn close" aria-label="Fermer">✕</button></header>
+    <div class="sheet-body settings">
+      <label class="row"><span>Vitesse du texte <em id="vText"></em></span><input type="range" id="sText" min="1" max="10" step="1"></label>
+      <label class="row"><span>Vitesse du mode Auto <em id="vAuto"></em></span><input type="range" id="sAuto" min="1" max="10" step="1"></label>
+      <label class="row"><span>Musique <em id="vMus"></em></span><input type="range" id="sMus" min="0" max="100" step="5"></label>
+      <label class="row"><span>Effets sonores <em id="vSfx"></em></span><input type="range" id="sSfx" min="0" max="100" step="5"></label>
+      <div class="row"><span>Taille du texte</span><div class="seg" id="segSize"><button data-v="s">S</button><button data-v="m">M</button><button data-v="l">L</button></div></div>
+      <div class="row"><span>Passer aussi le texte non lu</span><button class="toggle" id="tgUnread" role="switch"></button></div>
+      <div class="row"><span>Vibrations (si disponible)</span><button class="toggle" id="tgVib" role="switch"></button></div>
+      <div class="preview" id="preview">Aperçu : voici la taille et la vitesse du texte.</div>
+      <button class="pill danger" id="btnReset">Réinitialiser les données</button>
+      <p class="hint">Astuces : glisse vers le haut pour l'historique, vers le bas pour masquer l'interface. Appui long sur la scène : masquer aussi.</p>
+    </div></div></div>
+
+  <!-- ===== MODALE + TOAST ===== -->
+  <div class="modal" id="modal"><div class="m-card"><p id="mText"></p><div class="m-btns"><button class="pill" id="mNo">Annuler</button><button class="pill primary" id="mYes">Confirmer</button></div></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+<script src="story.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>
