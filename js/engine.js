@@ -375,7 +375,7 @@ app.addEventListener("contextmenu", e=>e.preventDefault());
 document.addEventListener("visibilitychange", ()=>{ if(document.hidden){ autosave(); music && music.pause(); } else if(music) music.play().catch(()=>{}); });
 
 /* ---------- Démarrage ---------- */
-document.title = S.title || "Miqka City";
+document.title = [S.title || "Miqka City", S.subtitle].filter(Boolean).join(" – ");
 $("gameTitle").textContent = S.title || "Miqka City";
 $("gameSub").textContent = S.subtitle || "";
 // précharger les images

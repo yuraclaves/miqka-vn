@@ -5,7 +5,7 @@
 window.STORY = {
 
   title: "Miqka City",
-  subtitle: "Sous-titre d'exemple",
+  subtitle: "Vraie ou fausse richesse ?",
   titleBackground: "toit",          // décor affiché derrière l'écran titre
   start: "exemple",                 // première scène lancée par « Nouvelle partie »
 

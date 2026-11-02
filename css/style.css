@@ -108,7 +108,7 @@ img{-webkit-user-drag:none;pointer-events:none}
 .t-kicker{font-weight:700;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:var(--gold)}
 .title h1{font:700 46px/1.05 "Fredoka";margin-top:8px;letter-spacing:1px;background:linear-gradient(180deg,#fff,#f6d9ff 60%,#f2a7c8);-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 4px 14px rgba(40,10,60,.55))}
-.t-sub{margin-top:8px;font-weight:600;font-size:16px;color:#f3e8ff;opacity:.9}
+.t-sub{margin-top:8px;font-weight:600;font-size:16px;color:#f3e8ff;opacity:.95;text-shadow:0 1px 2px rgba(30,8,45,.85),0 0 10px rgba(40,10,60,.7)}
 .t-sprite{position:absolute;left:0;width:100%;top:calc(var(--st) + 150px);height:calc(100% - var(--st) - var(--sb) - 350px);object-fit:contain;object-position:center bottom;animation:float 5s ease-in-out infinite;
   -webkit-mask-image:linear-gradient(180deg,#000 80%,transparent 98%);mask-image:linear-gradient(180deg,#000 80%,transparent 98%);
   filter:drop-shadow(0 0 1.2px rgba(40,20,60,.9)) drop-shadow(0 16px 30px rgba(30,10,40,.5))}
