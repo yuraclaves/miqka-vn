@@ -5,7 +5,7 @@
 window.STORY = {
 
   title: "Miqka City",
-  subtitle: "Vraie ou fausse richesse ?",
+  subtitle: "Vraie ou fausse richesse ?",
   titleBackground: "toit",          // décor affiché derrière l'écran titre
   start: "exemple",                 // première scène lancée par « Nouvelle partie »
 
@@ -20,14 +20,27 @@ window.STORY = {
         shy:      "assets/sprites/shy.png",
         sweet:    "assets/sprites/sweet.png"
       }
-    }
+    },
+    /* Employés de la Ville : représentés par leur buste officiel recadré (une seule « pose » : buste) */
+    estinien: {"name": "Estinien", "poses": {"buste": "assets/ville/estinien.webp"}},
+    homer: {"name": "Homer", "poses": {"buste": "assets/ville/homer.webp"}},
+    topaz: {"name": "Topaz", "poses": {"buste": "assets/ville/topaz.webp"}},
+    zenos: {"name": "Zenos", "poses": {"buste": "assets/ville/zenos.webp"}},
+    chiaki: {"name": "Chiaki", "poses": {"buste": "assets/ville/chiaki.webp"}},
+    bigjim: {"name": "Big Jim", "poses": {"buste": "assets/ville/bigjim.webp"}},
+    sinbad: {"name": "Sinbad", "poses": {"buste": "assets/ville/sinbad.webp"}},
+    rin: {"name": "Rin", "poses": {"buste": "assets/ville/rin.webp"}},
+    bakool: {"name": "Bakul Jaja", "poses": {"buste": "assets/ville/bakool.webp"}},
+    aventurine: {"name": "Aventurine", "poses": {"buste": "assets/ville/aventurine.webp"}},
+    fandaniel: {"name": "Fandaniel", "poses": {"buste": "assets/ville/fandaniel.webp"}}
   },
 
   /* --- Décors : nom -> fichier (SVG, JPG, PNG ou WEBP) --- */
   backgrounds: {
     toit: "assets/bg/toit.svg",     // toit au coucher du soleil
     rue:  "assets/bg/rue.svg",      // rue de nuit
-    cafe: "assets/bg/cafe.svg"      // intérieur de café
+    cafe: "assets/bg/cafe.svg",     // intérieur de café
+    ville: "assets/ville/city.webp" // Tuliyollal (capture officielle FINAL FANTASY XIV © SQUARE ENIX), décor des séquences d'embauche
   },
 
   /* --- Musiques (facultatif) : nom -> fichier audio ---
@@ -38,6 +51,472 @@ window.STORY = {
      SCÈNES. ⚠ CECI EST UN EXEMPLE (placeholder) : remplace-le par ton texte.
      =================================================================== */
   scenes: {
+
+    /* ---- SÉQUENCES D'EMBAUCHE ⚠ EXEMPLES [Exemple] : une scène « embauche_<id> » par employé.
+       Elle se joue à la PREMIÈRE embauche du perso ; à la fin, l'embauche est validée et on revient à la Ville.
+       Rejouables depuis « Histoire ». Garde 5 à 8 répliques pour ne pas freiner le jeu. ---- */
+    embauche_estinien: {
+      "chapter": "Embauche",
+      "title": "Estinien — Garde",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "pointing",
+          "text": "[Exemple] Toi, là-haut sur le toit ! Tu cherches du travail ?"
+        },
+        {
+          "speaker": "estinien",
+          "pose": "buste",
+          "text": "[Exemple] Je ne cherche rien. Je surveille. Les dragons, les voleurs… les pigeons.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] Parfait : Garde de Miqka City ! Payé en Mikua Coin."
+        },
+        {
+          "speaker": "estinien",
+          "pose": "buste",
+          "text": "[Exemple] …Y a-t-il un toit assez haut pour sauter ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] On en construira un exprès !"
+        },
+        {
+          "speaker": "estinien",
+          "pose": "buste",
+          "text": "[Exemple] Marché conclu. *saute de façon dramatique*"
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_homer: {
+      "chapter": "Embauche",
+      "title": "Homer — Donuts",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Monsieur Homer ! Miqka City a besoin d'un expert."
+        },
+        {
+          "speaker": "homer",
+          "pose": "buste",
+          "text": "[Exemple] Mmmh… un expert en quoi ? Je suis surtout expert en sieste.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] En donuts ! Un stand rose, avec des vermicelles."
+        },
+        {
+          "speaker": "homer",
+          "pose": "buste",
+          "text": "[Exemple] Woo-hoo ! Et je peux goûter tout le stock ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "shy",
+          "text": "[Exemple] …Disons un donut sur deux ?"
+        },
+        {
+          "speaker": "homer",
+          "pose": "buste",
+          "text": "[Exemple] Signé ! *bave sur le contrat*"
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_topaz: {
+      "chapter": "Embauche",
+      "title": "Topaz — Gestionnaire",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "sweet",
+          "text": "[Exemple] Bonjour ! J'ai entendu dire que tu adorais les tableurs."
+        },
+        {
+          "speaker": "topaz",
+          "pose": "buste",
+          "text": "[Exemple] Les tableurs, les budgets, les audits surprises… Montre-moi tes comptes.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "shy",
+          "text": "[Exemple] Euh… ils sont écrits au feutre sur un carton."
+        },
+        {
+          "speaker": "topaz",
+          "pose": "buste",
+          "text": "[Exemple] Hmm. Il y a du potentiel. Et beaucoup de travail."
+        },
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Donc tu acceptes d'être Gestionnaire ?"
+        },
+        {
+          "speaker": "topaz",
+          "pose": "buste",
+          "text": "[Exemple] J'accepte. Premier rendez-vous : demain, sept heures. Apporte le carton."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_zenos: {
+      "chapter": "Embauche",
+      "title": "Zenos — Prince",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "pointing",
+          "text": "[Exemple] Excusez-moi, Votre Altesse ! Un job de Prince, ça vous dit ?"
+        },
+        {
+          "speaker": "zenos",
+          "pose": "buste",
+          "text": "[Exemple] Un prince ne travaille pas. Il cherche un adversaire digne de lui.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] On a une machine à pinces très coriace à la fête foraine !"
+        },
+        {
+          "speaker": "zenos",
+          "pose": "buste",
+          "text": "[Exemple] …Enfin. Une véritable épreuve."
+        },
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Alors bienvenue dans l'équipe !"
+        },
+        {
+          "speaker": "zenos",
+          "pose": "buste",
+          "text": "[Exemple] Je la vaincrai. Quel qu'en soit le prix. Même deux jetons."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_chiaki: {
+      "chapter": "Embauche",
+      "title": "Chiaki — Joueuse",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "sweet",
+          "text": "[Exemple] Chiaki ? Tu dors ou tu joues ?"
+        },
+        {
+          "speaker": "chiaki",
+          "pose": "buste",
+          "text": "[Exemple] Les deux… je suis au niveau 99 en sieste stratégique.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] Il nous faut une Joueuse officielle pour tester la ville !"
+        },
+        {
+          "speaker": "chiaki",
+          "pose": "buste",
+          "text": "[Exemple] La ville a des quêtes secondaires ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Plein ! Et une salle d'arcade !"
+        },
+        {
+          "speaker": "chiaki",
+          "pose": "buste",
+          "text": "[Exemple] D'accord. Mais je garde ma manette."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_bigjim: {
+      "chapter": "Embauche",
+      "title": "Big Jim — Adjoint",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "pointing",
+          "text": "[Exemple] Monsieur Big Jim ! La mairie recrute un Adjoint."
+        },
+        {
+          "speaker": "bigjim",
+          "pose": "buste",
+          "text": "[Exemple] Un adjoint ? Moi, je suis plutôt du genre… à tout diriger.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "shy",
+          "text": "[Exemple] On a un très joli bureau. Avec une plante."
+        },
+        {
+          "speaker": "bigjim",
+          "pose": "buste",
+          "text": "[Exemple] Une plante… et un tampon officiel ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Deux tampons !"
+        },
+        {
+          "speaker": "bigjim",
+          "pose": "buste",
+          "text": "[Exemple] Hmm. J'accepte, pour le bien de la communauté, évidemment."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_sinbad: {
+      "chapter": "Embauche",
+      "title": "Sinbad — Roi des Sept Mers",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Ohé ! Tu es le Roi des Sept Mers ?"
+        },
+        {
+          "speaker": "sinbad",
+          "pose": "buste",
+          "text": "[Exemple] En personne ! Mais une ville sans port, c'est une aventure sans fin.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] On a une fontaine ! C'est presque une mer."
+        },
+        {
+          "speaker": "sinbad",
+          "pose": "buste",
+          "text": "[Exemple] Ha ha ! J'aime ton audace, petite."
+        },
+        {
+          "speaker": "miqka",
+          "pose": "sweet",
+          "text": "[Exemple] Alors tu rejoins Miqka City ?"
+        },
+        {
+          "speaker": "sinbad",
+          "pose": "buste",
+          "text": "[Exemple] Hissez les voiles ! Enfin… remplissez la fontaine."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_rin: {
+      "chapter": "Embauche",
+      "title": "Rin — Attaquante",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "pointing",
+          "text": "[Exemple] Rin ! L'équipe de foot de la ville cherche une star."
+        },
+        {
+          "speaker": "rin",
+          "pose": "buste",
+          "text": "[Exemple] Je ne joue pas pour être une star. Je joue pour être le meilleur.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] Tu pourrais être Attaquante… euh, Attaquant officiel !"
+        },
+        {
+          "speaker": "rin",
+          "pose": "buste",
+          "text": "[Exemple] …Montre-moi le terrain."
+        },
+        {
+          "speaker": "miqka",
+          "pose": "shy",
+          "text": "[Exemple] C'est un parking. Mais on a dessiné les lignes."
+        },
+        {
+          "speaker": "rin",
+          "pose": "buste",
+          "text": "[Exemple] Ça ira. Je marquerai quand même."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_bakool: {
+      "chapter": "Embauche",
+      "title": "Bakul Jaja — Chef de tribu",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "excited",
+          "text": "[Exemple] Bonjour à vous deux ! Vous êtes chef de tribu ?"
+        },
+        {
+          "speaker": "bakool",
+          "pose": "buste",
+          "text": "[Exemple] Nous sommes Bakul Jaja ! Deux têtes, double prestige, double appétit !",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] Miqka City cherche un chef pour sa tribu de travailleurs !"
+        },
+        {
+          "speaker": "bakool",
+          "pose": "buste",
+          "text": "[Exemple] Une tribu ? Des fidèles ? Des acclamations ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "sweet",
+          "text": "[Exemple] Au moins des applaudissements polis."
+        },
+        {
+          "speaker": "bakool",
+          "pose": "buste",
+          "text": "[Exemple] Ça nous suffit ! Gloire à Bakul Jaja !"
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_aventurine: {
+      "chapter": "Embauche",
+      "title": "Aventurine — Banquier",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "sweet",
+          "text": "[Exemple] Bonjour ! On m'a dit que tu étais doué avec l'argent."
+        },
+        {
+          "speaker": "aventurine",
+          "pose": "buste",
+          "text": "[Exemple] L'argent, les paris, les risques calculés… tout est une question de mise.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] La banque de Miqka City a besoin d'un Banquier !"
+        },
+        {
+          "speaker": "aventurine",
+          "pose": "buste",
+          "text": "[Exemple] Et si je double tes Mikua Coin à pile ou face ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "shy",
+          "text": "[Exemple] …On va dire non. Mais bienvenue quand même !"
+        },
+        {
+          "speaker": "aventurine",
+          "pose": "buste",
+          "text": "[Exemple] Dommage. J'aurais gagné, bien sûr."
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
+    embauche_fandaniel: {
+      "chapter": "Embauche",
+      "title": "Fandaniel — Événements",
+      "background": "ville",
+      "lines": [
+        {
+          "speaker": "miqka",
+          "pose": "pointing",
+          "text": "[Exemple] Toi, là, avec le grand sourire bizarre !"
+        },
+        {
+          "speaker": "fandaniel",
+          "pose": "buste",
+          "text": "[Exemple] Moi ? Je suis un artiste de la fin du monde ! Enfin… des grandes fêtes.",
+          "effect": "bounce"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "idea",
+          "text": "[Exemple] Parfait ! Il nous faut un responsable des Événements."
+        },
+        {
+          "speaker": "fandaniel",
+          "pose": "buste",
+          "text": "[Exemple] Feux d'artifice ? Confettis ? Petits chaos rigolos ?"
+        },
+        {
+          "speaker": "miqka",
+          "pose": "shy",
+          "text": "[Exemple] Sans le chaos, si possible."
+        },
+        {
+          "speaker": "fandaniel",
+          "pose": "buste",
+          "text": "[Exemple] Ha ha ha ! On verra bien !"
+        },
+        {
+          "end": true
+        }
+      ]
+    },
+
 
     exemple: {
       chapter: "Chapitre 1",

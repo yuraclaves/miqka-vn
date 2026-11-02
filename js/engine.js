@@ -84,7 +84,7 @@ function lineKey(){ return st.scene+":"+st.idx; }
 
 function enterScene(id, cb){
   const sc = sceneOf(id);
-  if(!sc){ toast("Scène introuvable : "+id); return goTitle(true); }
+  if(!sc){ toast("Scène introuvable : "+id); return seqEnd ? endSeq(true) : goTitle(true); }
   st.scene = id; st.idx = 0;
   if(sc.background){ st.bg = sc.background; showBg(st.bg); }
   if(sc.music !== undefined){ st.music = sc.music; setMusic(sc.music); }
@@ -172,7 +172,17 @@ function pick(c, el){
   setTimeout(()=>{ $("choices").textContent = ""; if(c.goto) enterScene(c.goto, showLine); else { st.idx++; showLine(); } }, 260);
 }
 function clearTimers(){ clearInterval(typeTimer); clearTimeout(autoTimer); clearTimeout(skipTimer); typing = false; }
+let seqEnd = null;          // séquence d'embauche en cours : rappel vers le jeu Ville
+function endSeq(ok){ const cb = seqEnd; seqEnd = null; clearTimers(); playing = false; setAuto(false); setSkip(false); waitingChoice = false; busy = false;
+  closeAll(); $("choices").textContent = ""; showSprite(null); app.classList.remove("seq","ui-hidden"); setMusic(null); if(cb) cb(ok); }
+function playScene(id, cb){
+  closeAll(); clearTimers(); setAuto(false); setSkip(false); st = freshState(); logArr = []; playing = true; waitingChoice = false; busy = false;
+  seqEnd = cb || (()=>{}); $("choices").textContent = ""; $("txt").textContent = ""; $("chap").textContent = ""; curSprite = null; showSprite(null);
+  app.classList.add("seq"); app.classList.remove("on-title","ui-hidden");
+  enterScene(id, showLine);
+}
 function endGame(){
+  if(seqEnd){ $("next").classList.remove("on"); return endSeq(true); }
   clearTimers(); playing = false; setAuto(false); setSkip(false);
   store.set("saves", Object.assign(store.get("saves", {}), {auto: undefined}));
   toast("Fin de la démo"); setTimeout(()=>goTitle(true), 900);
@@ -196,19 +206,19 @@ function startGame(){
   enterScene(S.start || Object.keys(S.scenes)[0], showLine);
 }
 function goTitle(skipConfirm){
-  const go = ()=>{ clearTimers(); setAuto(false); setSkip(false); playing = false; waitingChoice = false; busy = false;
+  const go = ()=>{ if(seqEnd){ seqEnd = null; app.classList.remove("seq"); } if(window.CITY && CITY.onTitle) CITY.onTitle(); clearTimers(); setAuto(false); setSkip(false); playing = false; waitingChoice = false; busy = false;
     closeAll(); $("choices").textContent = ""; showSprite(null); showBg(S.titleBackground || Object.keys(S.backgrounds||{})[0]);
     setMusic(S.titleMusic || null); app.classList.add("on-title"); app.classList.remove("ui-hidden"); refreshTitle(); };
-  if(skipConfirm === true) go(); else confirmBox("Retourner à l'écran titre ? La progression non sauvegardée sera perdue (la sauvegarde auto reste).", go);
+  if(skipConfirm === true) go(); else confirmBox(seqEnd ? "Retourner à l'écran titre ? La ville est sauvegardée ; cette séquence sera interrompue (embauche annulée)." : "Retourner à l'écran titre ? Ta ville est sauvegardée automatiquement.", go);
 }
 function savedKeys(){ const sv = store.get("saves", {}); return Object.keys(sv).filter(k=>sv[k]); }
-function refreshTitle(){ $("tCont").disabled = !savedKeys().length; }   // « Continuer » actif dès qu'une sauvegarde existe
+function refreshTitle(){ $("tCont").disabled = !(window.CITY && CITY.hasSave()); }   // « Continuer » : la partie (ville + séquences vues) est sauvegardée en continu   // « Continuer » actif dès qu'une sauvegarde existe
 
 /* ---------- Sauvegardes ---------- */
 const SLOTS = 6;
 function snapshot(){ return {st: JSON.parse(JSON.stringify(st)), log: logArr.slice(-120), time: Date.now(),
   preview: (full||"").slice(0, 90), text: full||"", who: $("box").classList.contains("narr") ? null : $("name").textContent }; }
-function autosave(){ if(!playing) return; clearTimeout(autosave.t);
+function autosave(){ if(!playing || seqEnd) return; clearTimeout(autosave.t);
   autosave.t = setTimeout(()=>{ const sv = store.get("saves", {}); sv.auto = snapshot(); store.set("saves", sv); }, 150); }
 function saveTo(slot){ const sv = store.get("saves", {}); sv[slot] = snapshot(); store.set("saves", sv); renderSlots(); toast("Sauvegardé dans l'emplacement "+slot); }
 function loadFrom(slot){
@@ -312,7 +322,7 @@ let pvT = 0;
 function previewType(){ clearInterval(pvT); const el = $("preview"), txt = "Aperçu : voici la taille et la vitesse du texte."; const d = charDelay();
   if(!d){ el.textContent = txt; return; } let i = 0; pvT = setInterval(()=>{ i++; el.textContent = txt.slice(0,i); if(i>=txt.length) clearInterval(pvT); }, d); }
 $("btnReset").onclick = ()=> confirmBox("Effacer toutes les sauvegardes, le texte lu et les réglages ?", ()=>{
-  store.clear(); cfg = Object.assign({}, DEF); read = new Set(); initSettings(); refreshTitle(); toast("Données réinitialisées"); });
+  store.clear(); if(window.CITY) CITY.reset(); cfg = Object.assign({}, DEF); read = new Set(); initSettings(); refreshTitle(); toast("Données réinitialisées"); });
 
 /* ---------- Commandes ---------- */
 $("btnAuto").onclick = e=>{ e.stopPropagation(); setAuto(!autoOn); };
@@ -329,17 +339,19 @@ $("shMenu").querySelectorAll("[data-act]").forEach(b=> b.onclick = ()=>{
   if(a==="load") openSaves("load");
   if(a==="settings"){ previewType(); openSheet("shSet"); }
   if(a==="title") goTitle();
+  if(a==="leave" && seqEnd) endSeq(false);
 });
-$("tNew").onclick = ()=>{ ac(); const sv = store.get("saves", {}); sv.auto ? confirmBox("Commencer une nouvelle partie ? (Tes sauvegardes restent disponibles.)", startGame) : startGame(); };
+$("tNew").onclick = ()=>{ ac(); if(!window.CITY) return startGame();
+  CITY.hasSave() ? confirmBox("Commencer une nouvelle partie ? Ta ville actuelle (Mikua Coin, employés, séquences vues) sera remise à zéro.", ()=>CITY.newGame()) : CITY.newGame(); };
 // « Continuer » : une seule sauvegarde → on la charge directement ; plusieurs → liste des emplacements en mode chargement
-$("tCont").onclick = ()=>{ ac(); const ks = savedKeys(); if(!ks.length) return; ks.length === 1 ? loadFrom(ks[0]) : openSaves("load"); };
+$("tCont").onclick = ()=>{ ac(); if(window.CITY && CITY.hasSave()) CITY.resume(); };
 $("tSet").onclick = ()=>{ ac(); previewType(); openSheet("shSet"); };
 
 function hideUI(on){ app.classList.toggle("ui-hidden", on); if(on){ clearTimeout(autoTimer); } else if(autoOn && !typing && !waitingChoice) autoTimer = setTimeout(advance, 800); }
 
 /* ---------- Gestes : toucher = avancer, glisser haut = historique, glisser bas / appui long = masquer ---------- */
 let g = null, lpTimer = 0;
-function gameSurface(t){ return playing && !sheetStack.length && !$("modal").classList.contains("on") && !t.closest("button,.sheet-wrap,.title,.modal"); }
+function gameSurface(t){ return playing && !app.classList.contains("mode-city") && !sheetStack.length && !$("modal").classList.contains("on") && !t.closest("button,.sheet-wrap,.title,.modal,.city,.modebar"); }
 app.addEventListener("pointerdown", e=>{
   if(!gameSurface(e.target)) { g = null; return; }
   g = {x:e.clientX, y:e.clientY, t:performance.now(), long:false};
@@ -362,14 +374,14 @@ app.addEventListener("pointerup", e=>{
 document.addEventListener("keydown", e=>{
   if($("modal").classList.contains("on")){ if(e.key==="Escape") $("mNo").click(); if(e.key==="Enter") $("mYes").click(); return; }
   if(sheetStack.length){ if(e.key==="Escape") closeSheet(sheetStack[sheetStack.length-1]); return; }
-  if(!playing) return;
+  if(!playing || app.classList.contains("mode-city")) return;
   if(e.key===" "||e.key==="Enter"){ e.preventDefault(); if(busy&&cardSkip) cardSkip(); else advance(); }
   else if(/^[1-9]$/.test(e.key) && waitingChoice){ const b = $("choices").children[+e.key-1]; b && b.click(); }
   else if(e.key==="Escape") openSheet("shMenu");
   else if(e.key==="h") hideUI(!app.classList.contains("ui-hidden"));
 });
 // Empêcher zoom / tirer-pour-rafraîchir / défilement de la page
-document.addEventListener("touchmove", e=>{ if(!e.target.closest(".sheet-body") && !e.target.closest("input[type=range]")) e.preventDefault(); }, {passive:false});
+document.addEventListener("touchmove", e=>{ if(!e.target.closest(".sheet-body,.cscroll") && !e.target.closest("input[type=range]")) e.preventDefault(); }, {passive:false});
 ["gesturestart","gesturechange","dblclick"].forEach(ev=>document.addEventListener(ev, e=>e.preventDefault(), {passive:false}));
 app.addEventListener("contextmenu", e=>e.preventDefault());
 document.addEventListener("visibilitychange", ()=>{ if(document.hidden){ autosave(); music && music.pause(); } else if(music) music.play().catch(()=>{}); });
@@ -382,5 +394,6 @@ $("gameSub").textContent = S.subtitle || "";
 Object.values(S.backgrounds||{}).concat(...Object.values(S.characters||{}).map(c=>Object.values(c.poses||{}))).forEach(u=>{ const i = new Image(); i.src = u; });
 initSettings(); goTitle(true);
 if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(()=>{});
-window.VN = {advance, state:()=>st, startGame, loadFrom, saveTo};   // pratique pour déboguer
+window.VN = {advance, state:()=>st, startGame, loadFrom, saveTo, goTitle, refreshTitle, playScene, confirm:confirmBox, toast,
+  inScene:()=>!!seqEnd, abortScene:()=>{ if(seqEnd) endSeq(false); }};   // pratique pour déboguer
 })();
