@@ -375,8 +375,8 @@ app.addEventListener("contextmenu", e=>e.preventDefault());
 document.addEventListener("visibilitychange", ()=>{ if(document.hidden){ autosave(); music && music.pause(); } else if(music) music.play().catch(()=>{}); });
 
 /* ---------- Démarrage ---------- */
-document.title = S.title || "Visual novel";
-$("gameTitle").textContent = S.title || "TITRE DU JEU";
+document.title = S.title || "Miqka City";
+$("gameTitle").textContent = S.title || "Miqka City";
 $("gameSub").textContent = S.subtitle || "";
 // précharger les images
 Object.values(S.backgrounds||{}).concat(...Object.values(S.characters||{}).map(c=>Object.values(c.poses||{}))).forEach(u=>{ const i = new Image(); i.src = u; });

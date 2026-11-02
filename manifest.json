@@ -1,6 +1,7 @@
 {
-  "name": "Titre du jeu",
-  "short_name": "Miqka",
+  "name": "Miqka City",
+  "short_name": "Miqka City",
+  "description": "Miqka City : un visual novel à jouer sur téléphone, directement dans le navigateur.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

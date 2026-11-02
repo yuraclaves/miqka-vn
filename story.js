@@ -4,7 +4,7 @@
    ===================================================================== */
 window.STORY = {
 
-  title: "TITRE DU JEU",
+  title: "Miqka City",
   subtitle: "Sous-titre d'exemple",
   titleBackground: "toit",          // décor affiché derrière l'écran titre
   start: "exemple",                 // première scène lancée par « Nouvelle partie »

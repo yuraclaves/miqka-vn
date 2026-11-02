@@ -1,4 +1,4 @@
-# Visual novel « Miqka » : interface (style Classique)
+# Miqka City : visual novel, interface (style Classique)
 
 Une appli web **sans installation ni compilation** : de simples fichiers HTML/CSS/JS.
 Elle marche **hors ligne** et s'ajoute à l'écran d'accueil de l'iPhone comme une vraie appli.
