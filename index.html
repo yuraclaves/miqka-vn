@@ -37,6 +37,7 @@
   <div class="stage" id="stage">
     <div class="bg" id="bgA"></div><div class="bg" id="bgB"></div>
     <div class="sprite-wrap"><img class="sprite" id="spA" alt=""><img class="sprite" id="spB" alt=""></div>
+    <div class="duo" id="duo"><div class="dslot L" id="dL"><img id="dLi" alt=""></div><div class="dslot R" id="dR"><img id="dRi" alt=""></div></div>
     <div class="vignette"></div>
   </div>
 
@@ -49,6 +50,7 @@
     <div class="lower">
       <div class="choices" id="choices"></div>
       <div class="box" id="box">
+        <div class="prog" id="prog" aria-hidden="true"></div>
         <div class="name" id="name">Miqka</div>
         <div class="txt" id="txt"></div>
         <div class="next" id="next"></div>
@@ -64,6 +66,7 @@
   </div>
 
   <!-- ===== CARTE DE CHAPITRE ===== -->
+  <div class="blk" id="blk"><div class="blk-t" id="blkT"></div></div>
   <div class="chapcard" id="chapcard"><div class="cc-k" id="ccK"></div><div class="cc-t" id="ccT"></div></div>
 
   <!-- ===== ÉCRAN TITRE ===== -->
@@ -123,11 +126,13 @@
   <div class="toast" id="toast"></div>
 </div>
 <script src="story.js"></script>
+<script src="story-hires.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/lightcone.js"></script>
 <script>window.MIQKA_DIR="assets/sprites/title/";</script>
 <script src="js/miqka.js"></script>
 <script src="js/wealth.js"></script>
 <script src="js/city.js"></script>
+<script src="js/daynight.js"></script>
 </body>
 </html>

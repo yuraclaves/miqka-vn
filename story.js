@@ -33,7 +33,7 @@ window.STORY = {
     bakool: {"name": "Bakool Jaja", "poses": {"buste": "assets/ville/bakool.webp"}},
     aventurine: {"name": "Aventurine", "poses": {"buste": "assets/ville/aventurine.webp"}},
     fandaniel: {"name": "Fandaniel", "poses": {"buste": "assets/ville/fandaniel.webp"}},
-    /* Hancock (prologue) : aucune image officielle détourable trouvée → pas de sprite (Miqka reste affichée), voir SOURCES.md */
+    /* Hancock : sprite défini dans story-hires.js (capture FFXIV fournie par le joueur, détourée ; voir SOURCES.md) */
     hancock: {"name": "Hancock", "poses": {}}
   },
 

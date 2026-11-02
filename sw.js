@@ -1,8 +1,8 @@
 /* Service worker : met le jeu en cache pour qu'il marche hors ligne.
    ⚠ Change VERSION à chaque mise à jour de ton histoire, sinon l'iPhone garde l'ancienne. */
-const VERSION = "vn-v7";
+const VERSION = "vn-v8";
 const FILES = [
-  "./", "index.html", "story.js", "js/engine.js", "css/style.css", "manifest.json",
+  "./", "index.html", "story.js", "story-hires.js", "js/daynight.js", "js/engine.js", "css/style.css", "manifest.json",
   "assets/fonts/Nunito.ttf", "assets/fonts/Nunito-Italic.ttf", "assets/fonts/Fredoka.ttf",
   "assets/sprites/excited.png", "assets/sprites/idea.png", "assets/sprites/pointing.png", "assets/sprites/shy.png", "assets/sprites/sweet.png",
   "assets/bg/toit.webp", "assets/bg/rue.webp", "assets/bg/cafe.webp", "assets/bg/prison.webp",

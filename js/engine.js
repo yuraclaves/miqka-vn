@@ -63,7 +63,50 @@ function showBg(name, instant){
   a.classList.add("on"); b.classList.remove("on");
   if(instant) requestAnimationFrame(()=>{ a.style.transition = b.style.transition = ""; });
 }
-function poseUrl(ch, pose){ const c = S.characters && S.characters[ch]; return c && c.poses && (c.poses[pose] || Object.values(c.poses)[0]); }
+function poseDef(ch, pose){ const c = S.characters && S.characters[ch]; if(!c || !c.poses) return null;
+  const v = c.poses[pose] || Object.values(c.poses)[0]; if(!v) return null; return typeof v === "string" ? {src:v} : v; }
+function poseUrl(ch, pose){ const d = poseDef(ch, pose); return d && d.src; }
+function hasPose(ch, pose){ const c = S.characters && S.characters[ch]; return !!(c && c.poses && c.poses[pose]); }
+/* ---------- Scènes à deux personnages (duo:true) : perso à GAUCHE, Miqka à DROITE, le locuteur est mis en avant ---------- */
+const DUO_FX = ["fx-bounce","fx-shake","fx-hop","fx-squish","fx-nod","fx-lean","fx-jump"];
+function duoSet(side, who){ const slot = $("d"+side), im = $("d"+side+"i");
+  const key = who ? who.c+":"+who.p : "";
+  if(slot.dataset.k === key) return; slot.dataset.k = key;
+  if(!who){ im.classList.remove("on"); return; }
+  const d = poseDef(who.c, who.p); if(!d){ im.classList.remove("on"); return; }
+  im.classList.remove("on");
+  const show = ()=>{ im.style.setProperty("--h", d.h||1); im.style.setProperty("--ax", d.ax==null?.5:d.ax); im.style.setProperty("--lift", d.lift||0); im.style.setProperty("--y", d.y||0);
+    im.classList.toggle("flip", !!d.flip); im.classList.add("on"); };
+  if(im.getAttribute("src") === d.src) show(); else { im.onload = show; im.src = d.src; }
+}
+function duoRender(side, effect){
+  duoSet("L", st.L); duoSet("R", st.R);
+  ["L","R"].forEach(k=>{ const el = $("d"+k); el.classList.toggle("speaking", side===k); el.classList.toggle("dim", !!side && side!==k && !!st[k]); });
+  $("box").classList.toggle("from-R", side==="R");
+  if(effect && side){ const im = $("d"+side+"i"); im.classList.remove(...DUO_FX); void im.offsetWidth; im.classList.add("fx-"+effect); setTimeout(()=>im.classList.remove("fx-"+effect), 800); }
+}
+function duoLine(ln){
+  if(ln.left !== undefined) st.L = ln.left ? (([c,p])=>({c, p:p||""}))(String(ln.left).split(":")) : null;
+  if(ln.right !== undefined) st.R = ln.right ? {c:"miqka", p:ln.right} : null;
+  const sp = ln.speaker; let side = null;
+  if(sp === "miqka"){ st.R = {c:"miqka", p: ln.pose || (st.R && st.R.p) || "sweet"}; side = "R"; }
+  else if(sp && S.characters && S.characters[sp]){
+    const same = st.L && st.L.c === sp;
+    const p = ln.pose && hasPose(sp, ln.pose) ? ln.pose : (same && st.L.p) || Object.keys(S.characters[sp].poses||{})[0] || "";
+    st.L = {c:sp, p}; side = "L"; }
+  if(ln.leave === "L") st.L = null; if(ln.leave === "R") st.R = null;
+  duoRender(side, ln.effect);
+}
+function duoOn(on){ app.classList.toggle("duo-on", !!on); if(!on){ st && (st.L = st.R = null); ["L","R"].forEach(k=>{ $("d"+k).dataset.k = ""; $("d"+k+"i").classList.remove("on"); $("d"+k).classList.remove("speaking","dim"); }); $("box").classList.remove("from-R"); } }
+function scr(e){ const el = $("stage"); el.classList.remove("scr-shake","scr-flash","scr-zoom"); void el.offsetWidth; el.classList.add("scr-"+e); setTimeout(()=>el.classList.remove("scr-"+e), 900); if(e==="shake") vibrate(25); }
+/* carte « Plus tard… » / fondu au noir avant une réplique */
+function preLine(ln, go){
+  const card = ln.card, black = ln.trans === "black" || !!card;
+  if(!black) return go();
+  busy = true; const blk = $("blk"); $("blkT").textContent = card ? VT(card) : ""; blk.classList.add("on");
+  let done = false; const fin = ()=>{ if(done) return; done = true; cardSkip = null; go(); setTimeout(()=>{ blk.classList.remove("on"); busy = false; }, 120); };
+  cardSkip = fin; setTimeout(fin, skipOn ? 250 : card ? 1700 : 650);
+}
 function showSprite(url, effect){
   const a = $(spFlip?"spA":"spB"), b = $(spFlip?"spB":"spA");
   if(!url){ $("spA").classList.remove("on"); $("spB").classList.remove("on"); curSprite = null; return; }
@@ -108,12 +151,20 @@ function showLine(){
   if(ln.goto){ return enterScene(ln.goto, showLine); }
   if(ln.end){ return endGame(); }
 
-  const bgName = ln.background || ln.bg; if(bgName){ st.bg = bgName; showBg(bgName); }
+  if((ln.card || ln.trans) && st.pre !== st.scene+":"+st.idx){ st.pre = st.scene+":"+st.idx; return preLine(ln, ()=>{ curBg = curBg; showLine(); }); }
+  const bgName = ln.background || ln.bg; if(bgName){ st.bg = bgName; showBg(bgName, !!(ln.card || ln.trans)); }
   if(ln.music !== undefined){ st.music = ln.music; setMusic(ln.music); }
+  if(ln.scr) scr(ln.scr);
+  duoOn(sc.duo);
+  if(sc.duo){ const pg = $("prog"); pg.style.setProperty("--p", Math.min(1, (st.idx+1)/Math.max(1, sc.lines.filter(l=>!l.end).length))); }
+  if(seqEnd && seqTrack) store.set("seqpos", {scene:st.scene, idx:st.idx, st:JSON.parse(JSON.stringify(st))});
+  if(sc.duo){ duoLine(ln); }
+  else {
   const isChar = ln.speaker && S.characters && S.characters[ln.speaker];
   if(ln.sprite === false || ln.pose === null){ st.char = null; st.pose = null; }
   else if(ln.pose || ln.sprite){ st.char = ln.character || (isChar ? ln.speaker : st.char || Object.keys(S.characters||{})[0]); st.pose = ln.sprite || ln.pose; }
   showSprite(st.pose ? (poseUrl(st.char, st.pose) || st.pose) : null, ln.effect);
+  }
 
   const choices = ln.choices || ln.choice;
   if(choices){
@@ -178,14 +229,26 @@ function pick(c, el){
 }
 function clearTimers(){ clearInterval(typeTimer); clearTimeout(autoTimer); clearTimeout(skipTimer); typing = false; }
 let seqEnd = null;          // séquence d'embauche en cours : rappel vers le jeu Ville
-function endSeq(ok){ const cb = seqEnd; seqEnd = null; clearTimers(); playing = false; setAuto(false); setSkip(false); waitingChoice = false; busy = false;
+let seqTrack = false;
+function endSeq(ok){ const cb = seqEnd; seqEnd = null; if(seqTrack) store.set("seqpos", null); seqTrack = false; duoOn(false); clearTimers(); playing = false; setAuto(false); setSkip(false); waitingChoice = false; busy = false;
   closeAll(); $("choices").textContent = ""; showSprite(null); app.classList.remove("seq","ui-hidden"); setMusic(null); if(cb) cb(ok); }
-function playScene(id, cb){
+/* opts.track : position mémorisée à chaque réplique (reprise après rechargement) ; opts.resume : reprendre à la position mémorisée */
+function playScene(id, cb, opts){ opts = opts || {};
   closeAll(); clearTimers(); setAuto(false); setSkip(false); st = freshState(); logArr = []; playing = true; waitingChoice = false; busy = false;
-  seqEnd = cb || (()=>{}); $("choices").textContent = ""; $("txt").textContent = ""; $("chap").textContent = ""; curSprite = null; showSprite(null);
-  app.classList.add("seq"); app.classList.remove("on-title","ui-hidden");
+  seqEnd = cb || (()=>{}); seqTrack = !!opts.track; $("choices").textContent = ""; $("txt").textContent = ""; $("chap").textContent = ""; curSprite = null; showSprite(null);
+  app.classList.add("seq"); app.classList.remove("on-title","ui-hidden"); duoOn(false);
+  preloadScene(id);
+  const sv = opts.resume && store.get("seqpos", null);
+  if(sv && sv.scene === id && sceneOf(id) && sv.idx > 0 && sv.idx < sceneOf(id).lines.length){
+    st = Object.assign(freshState(), sv.st); st.pre = st.scene+":"+st.idx; chapHTML(); curBg = null; showBg(st.bg, true); musicName = undefined; setMusic(st.music || null);
+    const sc = sceneOf(id); for(let i=0;i<st.idx;i++){ const l = sc.lines[i]; if(l && l.text) logArr.push({who:speakerName(l.speaker), text:VT(l.text)}); }
+    showLine(); toast("Reprise de la séquence"); return; }
   enterScene(id, showLine);
 }
+function preloadScene(id){ const sc = sceneOf(id); if(!sc) return; const u = new Set();
+  (sc.lines||[]).concat([sc]).forEach(l=>{ const b = l.background || l.bg; if(b) u.add(bgUrl(b));
+    if(l.speaker && S.characters && S.characters[l.speaker]) Object.values(S.characters[l.speaker].poses||{}).forEach(v=>u.add(typeof v==="string"?v:v.src)); });
+  u.forEach(x=>{ const i = new Image(); i.src = x; }); }
 function endGame(){
   if(seqEnd){ $("next").classList.remove("on"); return endSeq(true); }
   clearTimers(); playing = false; setAuto(false); setSkip(false);
@@ -203,7 +266,7 @@ function setSkip(on){ skipOn = on; $("btnSkip").classList.toggle("on", on); clea
     advance(); } }
 
 /* ---------- Partie / Titre ---------- */
-function freshState(){ return {scene:null, idx:0, bg:null, pose:null, char:null, chapter:null, chapTitle:"", music:null, vars:{}}; }
+function freshState(){ return {scene:null, idx:0, bg:null, pose:null, char:null, chapter:null, chapTitle:"", music:null, vars:{}, L:null, R:null, pre:null}; }
 function startGame(){
   closeAll(); st = freshState(); logArr = []; playing = true; waitingChoice = false; busy = false;
   $("choices").textContent = ""; $("txt").textContent = ""; $("chap").textContent = "";
@@ -211,7 +274,7 @@ function startGame(){
   enterScene(S.start || Object.keys(S.scenes)[0], showLine);
 }
 function goTitle(skipConfirm){
-  const go = ()=>{ if(seqEnd){ seqEnd = null; app.classList.remove("seq"); } if(window.CITY && CITY.onTitle) CITY.onTitle(); clearTimers(); setAuto(false); setSkip(false); playing = false; waitingChoice = false; busy = false;
+  const go = ()=>{ if(seqEnd){ seqEnd = null; app.classList.remove("seq"); } if(seqTrack){ store.set("seqpos", null); seqTrack = false; } duoOn(false); if(window.CITY && CITY.onTitle) CITY.onTitle(); clearTimers(); setAuto(false); setSkip(false); playing = false; waitingChoice = false; busy = false;
     closeAll(); $("choices").textContent = ""; showSprite(null); showBg(S.titleBackground || Object.keys(S.backgrounds||{})[0]);
     setMusic(S.titleMusic || null); app.classList.add("on-title"); app.classList.remove("ui-hidden"); refreshTitle(); };
   if(skipConfirm === true) go(); else confirmBox(seqEnd ? "Retourner à l'écran titre ? La ville est sauvegardée ; cette séquence sera interrompue (embauche annulée)." : "Retourner à l'écran titre ? Ta ville est sauvegardée automatiquement.", go);
@@ -396,9 +459,10 @@ document.title = [S.title || "Miqka City", S.subtitle].filter(Boolean).join(" �
 $("gameTitle").textContent = S.title || "Miqka City";
 $("gameSub").textContent = S.subtitle || "";
 // précharger les images
-Object.values(S.backgrounds||{}).concat(...Object.values(S.characters||{}).map(c=>Object.values(c.poses||{}))).forEach(u=>{ const i = new Image(); i.src = u; });
+/* précharger uniquement le décor titre et Miqka : les autres personnages ne se chargent qu'à l'ouverture de leur séquence (pas de divulgation) */
+[bgUrl(S.titleBackground || "toit")].concat(Object.values((S.characters.miqka||{}).poses||{})).forEach(u=>{ const i = new Image(); i.src = typeof u==="string"?u:u.src; });
 initSettings(); goTitle(true);
 if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(()=>{});
-window.VN = {advance, state:()=>st, startGame, loadFrom, saveTo, goTitle, refreshTitle, playScene, confirm:confirmBox, toast,
+window.VN = {advance, state:()=>st, startGame, loadFrom, saveTo, goTitle, refreshTitle, playScene, confirm:confirmBox, toast, seqPos:()=>store.get("seqpos", null), clearSeqPos:()=>store.set("seqpos", null),
   inScene:()=>!!seqEnd, abortScene:()=>{ if(seqEnd) endSeq(false); }};   // pratique pour déboguer
 })();

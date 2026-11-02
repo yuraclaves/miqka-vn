@@ -219,3 +219,51 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   .slots{grid-template-columns:1fr 1fr 1fr}
 }
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ====== v8 : scènes à deux personnages (perso à gauche, Miqka à droite) ====== */
+.duo{position:absolute;z-index:0;left:0;right:0;top:calc(var(--st) + 62px);bottom:calc(var(--sb) + 150px);display:none;pointer-events:none;--dh:min(100%,104vw);--under:96px}
+#app.duo-on .duo{display:block}
+#app.duo-on .sprite-wrap{display:none}
+.dslot{position:absolute;inset:0;transition:filter .35s ease}
+.dslot.L{--cx:25%;z-index:1}.dslot.R{--cx:75%;z-index:2}
+.dslot.speaking{z-index:3}
+.dslot img{position:absolute;left:var(--cx);bottom:calc(var(--under) * var(--lift,0) + var(--y,0) * 1%);height:calc(var(--dh) * var(--h,1));width:auto;max-width:none;
+  translate:calc(var(--ax,.5) * -100%) 0;transform-origin:50% 100%;opacity:0;transition:opacity .35s ease,scale .35s ease;scale:.97;user-select:none;-webkit-user-drag:none}
+.dslot img.on{opacity:1}
+.dslot img.flip{transform:scaleX(-1)}
+.dslot.speaking img{scale:1.02}
+.dslot.dim{filter:brightness(.58) saturate(.7)}
+.dslot.speaking{filter:drop-shadow(0 0 16px rgba(255,214,170,.42))}
+.dslot img.fx-bounce{animation:dBounce .55s cubic-bezier(.3,1.6,.5,1)}
+.dslot img.fx-hop{animation:dHop .5s ease}
+.dslot img.fx-shake{animation:dShake .45s ease}
+.dslot img.fx-squish{animation:dSquish .6s cubic-bezier(.3,1.4,.5,1)}
+.dslot img.fx-nod{animation:dNod .6s ease}
+.dslot img.fx-lean{animation:dLean .8s ease}
+.dslot img.fx-jump{animation:dJump .75s cubic-bezier(.3,.9,.4,1)}
+@keyframes dBounce{0%{transform:translateY(14px) scale(.98)}60%{transform:translateY(-8px)}100%{transform:none}}
+@keyframes dHop{0%,100%{transform:none}35%{transform:translateY(-18px)}}
+@keyframes dShake{0%,100%{transform:none}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+@keyframes dSquish{0%{transform:none}25%{transform:scale(1.06,.92)}55%{transform:scale(.96,1.05) translateY(-6px)}100%{transform:none}}
+@keyframes dNod{0%,100%{transform:none}30%{transform:translateY(7px) rotate(1.2deg)}60%{transform:translateY(-2px)}}
+@keyframes dLean{0%,100%{transform:none}40%,60%{transform:translateX(14px) rotate(2deg)}}
+@keyframes dJump{0%{transform:translateY(-120%)}70%{transform:translateY(4%)}85%{transform:scale(1.04,.95)}100%{transform:none}}
+.box.from-R .name{left:auto;right:20px}
+.prog{position:absolute;left:22px;right:22px;bottom:7px;height:3px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;display:none}
+.prog::after{content:"";position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,var(--lav),var(--pink));opacity:.7;transition:transform .35s ease}
+#app.duo-on .prog{display:block}
+.blk{position:absolute;inset:0;z-index:41;background:#07050f;opacity:0;pointer-events:none;transition:opacity .35s ease;display:flex;align-items:center;justify-content:center}
+.blk.on{opacity:1}
+.blk-t{font:600 22px/1.3 "Fredoka",sans-serif;color:#f3eaff;letter-spacing:.02em;text-align:center;padding:0 24px;font-style:italic}
+.stage.scr-shake{animation:sShake .5s ease}
+.stage.scr-zoom .bg.on{animation:sZoom .9s ease}
+.stage.scr-flash::after{content:"";position:absolute;inset:0;background:#fff;animation:sFlash .5s ease forwards;pointer-events:none;z-index:5}
+@keyframes sShake{0%,100%{transform:none}15%{transform:translate(-10px,4px)}30%{transform:translate(9px,-5px)}45%{transform:translate(-7px,3px)}60%{transform:translate(6px,-2px)}80%{transform:translate(-3px,1px)}}
+@keyframes sZoom{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes sFlash{0%{opacity:.85}100%{opacity:0}}
+@media (orientation:landscape) and (max-height:520px){
+  .duo{top:calc(var(--st) + 4px);bottom:0;--dh:94%;--under:0px}
+  .dslot.L{--cx:calc(16% + var(--sl))}.dslot.R{--cx:calc(84% - var(--sr))}
+  #app.duo-on .lower,#app.duo-on .bar{left:50%;right:auto;width:min(52%,600px);transform:translateX(-50%)}
+  #app.duo-on .choices{left:0;right:0;width:auto;bottom:calc(100% + 10px)}
+}

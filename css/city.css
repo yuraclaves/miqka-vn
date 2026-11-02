@@ -408,3 +408,32 @@
 .credits{font-size:12.5px;opacity:.9;margin:6px 0}.credits summary{cursor:pointer;font-weight:800;padding:6px 0}.credits ol{margin:4px 0;padding-left:20px;line-height:1.45}.credits a{color:inherit;overflow-wrap:anywhere}
 .town-name[hidden]{display:none}.tuto-go{white-space:nowrap}
 .c-mute.c-mus[hidden]{display:none!important}
+
+/* ====== v8 : cycle jour/nuit de l'onglet Ville (couches de teinte et de lumière par-dessus l'illustration de jour) ====== */
+.town-img{aspect-ratio:2250/904;--n:0;--dusk:0;--dawn:0}
+.dn{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.dn>div,.dn-stars i,.dn-lights i,.dn-sea i{position:absolute;transition:opacity 2.2s linear}
+.dn-instant .dn>div,.dn-instant .dn-stars i,.dn-instant .dn-lights i{transition:none}
+.dn-dawn,.dn-dusk,.dn-night,.dn-shade,.dn-glow-dusk,.dn-glow-dawn,.dn-stars,.dn-lights,.dn-sea,.dn-moonpath{inset:0}
+.dn-night{background:linear-gradient(180deg,#46577a 0%,#5d6f8f 55%,#53637f 100%);mix-blend-mode:multiply;opacity:var(--n)}
+.dn-shade{background:linear-gradient(180deg,rgba(6,10,22,.42),rgba(6,10,22,.12) 45%,rgba(6,10,22,.3));opacity:var(--n)}
+.dn-dusk{background:linear-gradient(180deg,#e7a46e 0%,#f2b27c 50%,#c98a63 100%);mix-blend-mode:multiply;opacity:calc(var(--dusk) * .85)}
+.dn-glow-dusk{background:radial-gradient(ellipse 48% 30% at 18% 64%,rgba(255,176,104,.62),rgba(255,150,90,.18) 55%,transparent 75%);mix-blend-mode:screen;opacity:var(--dusk)}
+.dn-dawn{background:linear-gradient(180deg,#d9b9a8 0%,#efd2b4 55%,#d8c0ae 100%);mix-blend-mode:multiply;opacity:calc(var(--dawn) * .7)}
+.dn-glow-dawn{background:radial-gradient(ellipse 40% 26% at 6% 62%,rgba(255,214,168,.5),transparent 70%);mix-blend-mode:screen;opacity:var(--dawn)}
+.dn-stars{opacity:calc((var(--n) - .45) * 2)}
+.dn-stars i{width:var(--s);height:var(--s);border-radius:50%;background:#f4f1e6;box-shadow:0 0 3px rgba(244,241,230,.8);animation:dnTw 5s ease-in-out infinite}
+@keyframes dnTw{0%,100%{opacity:.85}50%{opacity:.25}}
+.dn-moon{width:3.2%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fbf8ec,#e6e1cf 60%,#cfc9b4);
+  box-shadow:0 0 18px 6px rgba(240,236,214,.35),0 0 60px 24px rgba(200,210,230,.12);opacity:calc((var(--n) - .3) * 1.5);animation:dnMoon 600s linear infinite}
+@keyframes dnMoon{0%{transform:translateY(6px)}50%{transform:translateY(-6px)}100%{transform:translateY(6px)}}
+.dn-moonpath{background:radial-gradient(ellipse 4% 22% at 14.6% 82%,rgba(235,236,220,.28),transparent 70%);opacity:calc((var(--n) - .4) * 1.6)}
+.dn-sea{opacity:calc(.55 + var(--n) * .25 + var(--dusk) * .2)}
+.dn-sea i{height:.35%;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:dnSea 5s ease-in-out infinite;opacity:0}
+@keyframes dnSea{0%,100%{opacity:0;transform:translateX(-12px)}50%{opacity:.7;transform:translateX(12px)}}
+.dn-lights i{width:1.1%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,236,190,1) 0%,rgba(255,196,110,.75) 30%,rgba(255,170,80,.18) 60%,transparent 72%);
+  opacity:clamp(0,calc((var(--n) - var(--t)) * 5),1);animation:dnFl 9s ease-in-out infinite}
+.dn-lights i.beacon{width:2.4%}
+@keyframes dnFl{0%,100%{scale:1}47%{scale:1}50%{scale:.82}53%{scale:1}}
+@media (prefers-reduced-motion:reduce){.dn *,.dn-moon{animation:none!important}.dn-sea i{opacity:.35}}

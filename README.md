@@ -100,6 +100,31 @@ Ajoute un fichier dans `assets/music/`, puis déclare-le : `music: { theme: "ass
 
 ---
 
+## 7. Scènes « duo » (v8) — embauches longues
+
+Les scènes d'embauche sont dans `story-hires.js` (`hire_<id>`, prioritaires sur les anciennes `embauche_<id>`). Tous les textes sont **originaux**, écrits pour ce jeu. Le nom de la ville s'écrit toujours `{ville}` (remplacé par `CITY.fill`).
+
+```js
+ST.scenes.hire_x = { duo:true, chapter:"Embauche", title:"X — Métier", background:"parking", lines:[
+  { card:"Plus tard…", bg:"conseil" },                       // carton noir + changement de fond instantané
+  { speaker:"x", text:"…", left:"x:neutre", effect:"bounce" }, // perso à GAUCHE (left:"id:pose")
+  { speaker:"miqka", text:"…", right:"surprise", scr:"shake" }, // Miqka à DROITE ; scr = shake | flash | zoom
+  { speaker:"x", text:"…", leave:"L" },                        // le perso de gauche sort
+]};
+```
+- `effect` : bounce, hop, shake, squish, nod, lean, jump. `trans:"black"` : fondu au noir.
+- Pose objet : `{src, h, ax, lift, y}` → hauteur relative (h), ancrage horizontal (ax), remontée au-dessus de la boîte (lift).
+- Le locuteur est mis en avant, l'autre est atténué. Barre de progression discrète (sans total affiché).
+- Reprise après rechargement (`miqka_vn.seqpos`), Passer seulement sur les répliques déjà lues, rejouables dans Employés › Histoire.
+- Les embauches se font dans l'ordre de la liste (l'histoire se suit).
+- Sprites et fonds d'une scène ne sont chargés qu'à son lancement.
+
+## 8. Cycle jour/nuit (onglet Ville)
+
+`js/daynight.js` : **horloge de jeu de 10 minutes réelles** (aube ≈ 1 min, jour ≈ 3,5 min, couchant ≈ 1,5 min, nuit ≈ 3 min), calée sur l'heure de l'appareil, donc identique après rechargement. Choisie plutôt que l'heure réelle pour que le joueur voie la ville changer pendant une partie ; aucun réglage nécessaire.
+Calques CSS seulement (ciel, assombrissement bleuté, lueur du couchant, étoiles discrètes, lune, fenêtres allumées, scintillement de la mer), animations en transform/opacity, `prefers-reduced-motion` respecté, purement visuel.
+Test : `?dn=0.3` (jour), `?dn=0.56` (couchant), `?dn=0.8` (nuit), `?dn=0.02` (aube).
+
 ## Fonctions de l'interface
 
 - **Écran titre** : Nouvelle partie, Continuer (reprend la sauvegarde automatique), Chargement et Réglages.
