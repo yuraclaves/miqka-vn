@@ -37,27 +37,29 @@ var A={
    aura = couleur sobre du halo, fx = niveau d'effets de clic (0 normal, 1 pièces, 2 étincelles dorées, 3 + léger tremblement), rain = pluie de pièces. */
 var TIERS=[
  {at:0,        st:"Elle est dans la merde.",                    v:[["fly"],["fly","fly2"],["fly2"]], aura:"#8a8f86"},
- {at:60,       st:"Même le pigeon la plaint.",                  v:[["bandA"],["bandB"],["bandA","bandC"]], aura:"#9a9384"},
- {at:130,      st:"Dort dans un carton (avec poignées).",       v:[["carton"]], aura:"#a08a6a"},
- {at:250,      st:"Cernes jusqu'aux genoux.",                    v:[["cernes"]], aura:"#8d8aa0"},
- {at:600,      st:"Fraude le métro avec élégance.",             v:[["ticket"]], aura:"#b9a35a"},
- {at:1200,     st:"Une pièce trouée ! C'est un début.",         v:[["holed"],["holedA"]], aura:"#b08a5a"},
- {at:2500,     st:"Raccommode ses trous au scotch.",            v:[["patchA"],["patchB"],["patchC"]], aura:"#7f9bb5"},
- {at:5000,     st:"Barrette à 1 Kwak, regard à 1 million.",     v:[["clipA"],["clipB"]], aura:"#c79bb0"},
- {at:9000,     st:"Lunettes de comptable activées.",            v:[["glR"],["glQ"]], aura:"#86a9a0"},
- {at:16000,    st:"Écharpe de mamie, chaleur garantie.",        v:[["scarf"]], aura:"#c7816f"},
- {at:30000,    st:"Béret : elle a lu un livre.",                v:[["beret"]], aura:"#b5707a"},
- {at:55000,    st:"Un sac ! Dedans : un autre sac.",            v:[["bagS"],["bagL"]], aura:"#c9a36b"},
- {at:100000,   st:"Des perles. Vraies ? On ne demande pas.",    v:[["pearls"]], aura:"#d8d2c4"},
- {at:180000,   st:"Sa montre donne l'heure… en or.",            v:[["watch"]], aura:"#d6b86a"},
- {at:320000,   st:"Haut-de-forme. L'ego aussi.",                v:[["tophat"]], aura:"#9fb0c8"},
- {at:550000,   st:"Lunettes de soleil, surtout la nuit.",       v:[["sunA"],["sunB"]], aura:"#e3b45a", fx:1},
- {at:900000,   st:"Chaîne en or : 3 kg de réussite.",           v:[["chain"]], aura:"#e8c25a", fx:1},
- {at:1500000,  st:"Agite des billets sans raison.",             v:[["cash"],["cash2"]], aura:"#8fc59a", fx:2},
- {at:2500000,  st:"Cigare en chocolat. On espère.",             v:[["cigar","smoke"]], aura:"#c99a6a", fx:2},
- {at:5000000,  st:"Elle voit des Kwak partout.",                v:[["dollar"]], aura:"#f0cf5a", fx:3},
- {at:10000000, st:"Reine de tout. Même des pigeons.",           v:[["crown"],["crown","bl1"]], aura:"#ffd75e", fx:3, rain:2}
+ {at:100,       st:"Même le pigeon la plaint.",                  v:[["bandA"],["bandB"],["bandA","bandC"]], aura:"#9a9384"},
+ {at:600,      st:"Dort dans un carton (avec poignées).",       v:[["carton"]], aura:"#a08a6a"},
+ {at:4300,      st:"Cernes jusqu'aux genoux.",                    v:[["cernes"]], aura:"#8d8aa0"},
+ {at:22000,      st:"Fraude le métro avec élégance.",             v:[["ticket"]], aura:"#b9a35a"},
+ {at:93000,     st:"Une pièce trouée ! C'est un début.",         v:[["holed"],["holedA"]], aura:"#b08a5a"},
+ {at:310000,     st:"Raccommode ses trous au scotch.",            v:[["patchA"],["patchB"],["patchC"]], aura:"#7f9bb5"},
+ {at:1000000,     st:"Barrette à 1 Kwak, regard à 1 million.",     v:[["clipA"],["clipB"]], aura:"#c79bb0"},
+ {at:2800000,     st:"Lunettes de comptable activées.",            v:[["glR"],["glQ"]], aura:"#86a9a0"},
+ {at:6900000,    st:"Écharpe de mamie, chaleur garantie.",        v:[["scarf"]], aura:"#c7816f"},
+ {at:19000000,    st:"Béret : elle a lu un livre.",                v:[["beret"]], aura:"#b5707a"},
+ {at:44000000,    st:"Un sac ! Dedans : un autre sac.",            v:[["bagS"],["bagL"]], aura:"#c9a36b"},
+ {at:90000000,   st:"Des perles. Vraies ? On ne demande pas.",    v:[["pearls"]], aura:"#d8d2c4"},
+ {at:190000000,   st:"Sa montre donne l'heure… en or.",            v:[["watch"]], aura:"#d6b86a"},
+ {at:380000000,   st:"Haut-de-forme. L'ego aussi.",                v:[["tophat"]], aura:"#9fb0c8"},
+ {at:710000000,   st:"Lunettes de soleil, surtout la nuit.",       v:[["sunA"],["sunB"]], aura:"#e3b45a", fx:1},
+ {at:1300000000,   st:"Chaîne en or : 3 kg de réussite.",           v:[["chain"]], aura:"#e8c25a", fx:1},
+ {at:2200000000,  st:"Agite des billets sans raison.",             v:[["cash"],["cash2"]], aura:"#8fc59a", fx:2},
+ {at:3800000000,  st:"Cigare en chocolat. On espère.",             v:[["cigar","smoke"]], aura:"#c99a6a", fx:2},
+ {at:5900000000,  st:"Elle voit des Kwak partout.",                v:[["dollar"]], aura:"#f0cf5a", fx:3},
+ {at:8700000000, st:"Reine de tout. Même des pigeons.",           v:[["crown"],["crown","bl1"]], aura:"#ffd75e", fx:3, rain:2}
 ];
+/* v10 : seuils (Kwak Coin gagnés au total) très étirés après les 3 premiers ; temps simulés (3 clics/s, achats rentables) :
+   0:30, 1:30, 4 min, 10 min, 20 min, 35 min, 55 min, 1h20, 1h50, 2h30, 3h15, 4h05, 5h, 6h05, 7h15, 8h35, 10h, 11h30, 13h10, 14h40 (économie v10 ≈ 15 h). Jamais affichés au joueur. */
 function tierOf(total){ var t=0; for(var i=0;i<TIERS.length;i++) if(total>=TIERS[i].at) t=i; return t; }
 function rng(seed){ var s=(seed>>>0)||1; return function(){ s^=s<<13; s^=s>>>17; s^=s<<5; return ((s>>>0)%10000)/10000; }; }
 function pick(t,seed){ var r=rng(seed+t*7919), v=TIERS[t].v; return v[(r()*v.length)|0].slice(); }
