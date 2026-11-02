@@ -76,7 +76,7 @@ function fx(el, e){ el.classList.remove("fx-bounce","fx-shake","fx-hop"); void e
   setTimeout(()=>el.classList.remove("fx-"+e), 700); }
 function chapHTML(){ const c = st.chapter, t = st.chapTitle; const el = $("chap"); el.textContent = "";
   if(c){ const b = document.createElement("b"); b.textContent = c; el.appendChild(b); }
-  if(t){ el.appendChild(document.createTextNode((c?" · ":"") + t)); } }
+  if(t){ el.appendChild(document.createTextNode((c?" · ":"") + VT(t))); } }
 
 /* ---------- Déroulement ---------- */
 function sceneOf(id){ return S.scenes && S.scenes[id]; }
@@ -93,7 +93,7 @@ function enterScene(id, cb){
   if(newChap && !skipOn) chapterCard(sc.chapter, sc.title, cb); else cb();
 }
 function chapterCard(k, t, cb){
-  busy = true; $("ccK").textContent = k || ""; $("ccT").textContent = t || "";
+  busy = true; $("ccK").textContent = k || ""; $("ccT").textContent = VT(t || "");
   const cc = $("chapcard"); cc.classList.add("on");
   let done = false; const fin = ()=>{ if(done) return; done = true; cc.classList.remove("on"); busy = false; setTimeout(cb, 250); };
   setTimeout(fin, 1700); cardSkip = fin;
@@ -124,7 +124,12 @@ function showLine(){
   autosave();
 }
 function speakerName(sp){ if(!sp) return null; const c = S.characters && S.characters[sp]; return c ? c.name : sp; }
+/* {ville} = nom de ville choisi par le joueur (texte brut, rendu en textContent) */
+var DBG_MISSING = /[?&]debug\b/.test(location.search);   /* debug : cadre « image manquante » pour un locuteur sans sprite officiel */
+function VT(t){ return (window.CITY && CITY.fill) ? CITY.fill(t) : t; }
 function setText(sp, text, noArrow){
+  text = VT(text);
+  if(DBG_MISSING) $("stage").classList.toggle("dbg-missing", sp==="hancock" && !poseUrl("hancock","buste"));
   const nm = speakerName(sp); const box = $("box");
   box.classList.toggle("narr", !nm); if(nm) $("name").textContent = nm;
   logArr.push({who:nm, text}); if(logArr.length > 300) logArr.shift();
@@ -160,7 +165,7 @@ function showChoices(list){
   waitingChoice = true; setSkip(false); clearTimers();
   const box = $("choices"); box.textContent = "";
   list.forEach((c, i)=>{ const b = document.createElement("button"); b.className = "choice"; b.style.animationDelay = (i*60)+"ms";
-    const n = document.createElement("span"); n.textContent = i+1; b.append(n, document.createTextNode(c.text));
+    const n = document.createElement("span"); n.textContent = i+1; b.append(n, document.createTextNode(VT(c.text)));
     b.addEventListener("click", e=>{ e.stopPropagation(); pick(c, b); }); box.appendChild(b); });
   autosave();
 }

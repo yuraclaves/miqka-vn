@@ -32,15 +32,18 @@ window.STORY = {
     rin: {"name": "Rin", "poses": {"buste": "assets/ville/rin.webp"}},
     bakool: {"name": "Bakool Jaja", "poses": {"buste": "assets/ville/bakool.webp"}},
     aventurine: {"name": "Aventurine", "poses": {"buste": "assets/ville/aventurine.webp"}},
-    fandaniel: {"name": "Fandaniel", "poses": {"buste": "assets/ville/fandaniel.webp"}}
+    fandaniel: {"name": "Fandaniel", "poses": {"buste": "assets/ville/fandaniel.webp"}},
+    /* Hancock (prologue) : aucune image officielle détourable trouvée → pas de sprite (Miqka reste affichée), voir SOURCES.md */
+    hancock: {"name": "Hancock", "poses": {}}
   },
 
   /* --- Décors : nom -> fichier (SVG, JPG, PNG ou WEBP) --- */
   backgrounds: {
-    toit: "assets/bg/toit.svg",     // toit au coucher du soleil
-    rue:  "assets/bg/rue.svg",      // rue de nuit
-    cafe: "assets/bg/cafe.svg",     // intérieur de café
-    ville: "assets/ville/city.webp" // Limsa Lominsa (capture officielle FINAL FANTASY XIV © SQUARE ENIX), décor des séquences d'embauche
+    toit: "assets/bg/toit.webp",     // toit au coucher du soleil
+    rue:  "assets/bg/rue.webp",      // rue de nuit
+    cafe: "assets/bg/cafe.webp",     // intérieur de café
+    prison: "assets/bg/prison.webp", // cellule de prison (photo Wikimedia Commons, crédits SOURCES.md), décor du prologue
+    ville: "assets/ville/city.webp" // décor de la ville du joueur (crédits : SOURCES.md), séquences d'embauche
   },
 
   /* --- Musiques (facultatif) : nom -> fichier audio ---
@@ -74,7 +77,7 @@ window.STORY = {
         {
           "speaker": "miqka",
           "pose": "idea",
-          "text": "[Exemple] Parfait : Garde de Miqka City ! Payé en Kwak Coin."
+          "text": "[Exemple] Parfait : Garde de {ville} ! Payé en Kwak Coin."
         },
         {
           "speaker": "estinien",
@@ -105,7 +108,7 @@ window.STORY = {
         {
           "speaker": "miqka",
           "pose": "excited",
-          "text": "[Exemple] Monsieur Homer ! Miqka City a besoin d'un expert."
+          "text": "[Exemple] Monsieur Homer ! {ville} a besoin d'un expert."
         },
         {
           "speaker": "homer",
@@ -336,7 +339,7 @@ window.STORY = {
         {
           "speaker": "miqka",
           "pose": "sweet",
-          "text": "[Exemple] Alors tu rejoins Miqka City ?"
+          "text": "[Exemple] Alors tu rejoins {ville} ?"
         },
         {
           "speaker": "sinbad",
@@ -410,7 +413,7 @@ window.STORY = {
         {
           "speaker": "miqka",
           "pose": "idea",
-          "text": "[Exemple] Miqka City cherche un chef pour sa tribu de travailleurs !"
+          "text": "[Exemple] {ville} cherche un chef pour sa tribu de travailleurs !"
         },
         {
           "speaker": "bakool",
@@ -452,7 +455,7 @@ window.STORY = {
         {
           "speaker": "miqka",
           "pose": "idea",
-          "text": "[Exemple] La banque de Miqka City a besoin d'un Banquier !"
+          "text": "[Exemple] La banque de {ville} a besoin d'un Banquier !"
         },
         {
           "speaker": "aventurine",
@@ -531,6 +534,62 @@ window.STORY = {
             { text: "Choix A (exemple)", goto: "exemple_a" },
             { text: "Choix B (exemple)", goto: "exemple_b" }
         ] }
+      ]
+    },
+
+    /* ---- PROLOGUE / TUTORIEL (narré par Miqka). Joué une fois à la Nouvelle partie, rejouable depuis « Histoire ».
+       {ville} = nom de ville choisi par le joueur (inséré en texte brut). Les phases de clic (10 puis 50 Kwak Coin) sont gérées par js/city.js. ---- */
+    tuto_1: {
+      chapter: "Prologue", title: "Miqka en prison", background: "prison",
+      lines: [
+        { speaker: "miqka", pose: "shy", text: "Oh daaawg…" },
+        { speaker: "miqka", pose: "shy", effect: "shake", text: "J'ai pris 67 ans de prison… J'aurais jamais dû voler ce Crousty…" },
+        { speaker: "miqka", pose: "pointing", effect: "hop", text: "Eh, toi ! Le garde !" },
+        { speaker: "miqka", pose: "idea", text: "Des Kwak Coin, ça te dit ?" },
+        { speaker: "miqka", pose: "sweet", text: "Pssst… pour 10 Kwak Coin, tu me laisses filer ?" },
+        { end: true }
+      ]
+    },
+    tuto_2: {
+      chapter: "Prologue", title: "La grande évasion", background: "prison",
+      lines: [
+        { speaker: "miqka", pose: "excited", effect: "bounce", text: "C'EST VRAI ? GÉNIAL !" },
+        { end: true }
+      ]
+    },
+    tuto_3: {
+      chapter: "Prologue", title: "Un drôle de marchand", background: "ville",
+      lines: [
+        { speaker: "miqka", pose: "shy", effect: "shake", text: "Ouf… j'ai couru jusqu'ici mais… je suis où, maintenant, zebi ?" },
+        { speaker: "hancock", character: "miqka", pose: "sweet", text: "*se frotte les mains* Vous m'avez l'air dans de beaux draps ! À la recherche d'une cachette ?" },
+        { speaker: "hancock", character: "miqka", pose: "sweet", text: "J'ai pile ce qu'il vous faut ! Pour 15 Kwak Coin, je vous cède ce terrain, et vous pourrez y bâtir la ville de vos rêves ^^" },
+        { speaker: "miqka", pose: "pointing", text: "O-oh… ouais, haha, pile ce qu'il me faut ! Combien de Kwak Coin pour votre sna-… bref. Oui ! Récoltons de la thune !" },
+        { end: true }
+      ]
+    },
+    tuto_4: {
+      chapter: "Prologue", title: "Le terrain", background: "ville",
+      lines: [
+        { speaker: "hancock", character: "miqka", pose: "sweet", text: "15 Kwak Coin tout rond, un plaisir de faire affaire avec vous ! Et dites-moi… comment s'appellera votre ville ?" },
+        { end: true }
+      ]
+    },
+    tuto_5: {
+      chapter: "Prologue", title: "Bienvenue à {ville}", background: "ville",
+      lines: [
+        { speaker: "miqka", pose: "excited", effect: "hop", text: "{ville}… Ça sonne bien ! Bon, c'est un terrain vague, mais c'est NOTRE terrain vague." },
+        { speaker: "miqka", pose: "idea", text: "Le principe est simple : plus on a de Kwak Coin, plus on peut engager de personnages." },
+        { speaker: "miqka", pose: "pointing", text: "Et chaque personnage engagé débloque un bout d'histoire… et fait grandir {ville} !" },
+        { speaker: "miqka", pose: "excited", effect: "bounce", text: "Objectif : agrandir {ville}, rencontrer plein de personnages et profiter de l'histoire. C'est parti !" },
+        { end: true }
+      ]
+    },
+    tuto_nom: {
+      chapter: "Prologue", title: "Un nom pour la ville", background: "ville",
+      lines: [
+        { speaker: "miqka", pose: "shy", text: "Dis… je viens de réaliser un truc gênant. Notre ville n'a toujours pas de nom !" },
+        { speaker: "miqka", pose: "idea", text: "Choisis-en un, tu pourras le changer plus tard dans les Réglages." },
+        { end: true }
       ]
     },
 
