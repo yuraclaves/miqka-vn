@@ -1,0 +1,20 @@
+/* ====== Miqka — poses animées de l'écran titre (v2, anti-clignotement Safari) ======
+   Structure : .mq (flottement CSS) > .mq-sq (squish, transform piloté en JS, calque GPU permanent) > 5 <img> persistants.
+   Les <img> ne sont PAS des calques séparés (pas de will-change/transform sur eux) : ils sont peints dans le calque
+   de .mq-sq. Une pose est soit à opacity 1, soit à 0 — jamais entre les deux (sauf fondu reduced-motion, au-dessus
+   de l'ancienne pose qui reste à 1). Contour, halo, colorimétrie, ombre : cuits dans assets/miqka/*.webp. */
+.mq{position:absolute;left:0;width:100%;top:calc(var(--st) + 122px);height:calc(100% - var(--st) - var(--sb) - 278px);
+  z-index:1;pointer-events:none;animation:mq-float 5s ease-in-out infinite;animation-delay:var(--mqfd,0s)}
+.mq-sq{position:absolute;inset:0;transform-origin:50% 96%;transform:translateZ(0);will-change:transform;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden}
+.mq-sq img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;
+  opacity:0;-webkit-user-drag:none;user-select:none}
+.mq-sq img.on{opacity:1}
+@keyframes mq-float{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-8px,0)}}
+.mq.paused{animation-play-state:paused}
+.nosprite .mq{display:none}
+@media (orientation:landscape) and (max-height:520px){
+  .mq{left:auto;right:3%;width:46%;top:calc(var(--st) + 4px);height:calc(100% - var(--st) - 4px);animation:none}}
+@media (prefers-reduced-motion:reduce){.mq{animation:none}}
+
+#app:not(.on-title) .mq{animation-play-state:paused}

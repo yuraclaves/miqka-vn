@@ -101,20 +101,19 @@ img{-webkit-user-drag:none;pointer-events:none}
 .cc-k:after{content:"";display:block;width:60px;height:2px;margin:10px auto 0;background:linear-gradient(90deg,var(--lav),var(--pink))}
 
 /* ====== Écran titre ====== */
-.title{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;padding:calc(var(--st) + 40px) 28px calc(var(--sb) + 18px);transition:opacity .6s,visibility .6s;
+.title{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;padding:calc(var(--st) + 44px) 28px calc(var(--sb) + 20px);transition:opacity .6s,visibility .6s;
   background:linear-gradient(180deg,rgba(30,20,60,.35),transparent 30%,transparent 50%,rgba(20,12,40,.55) 68%,rgba(20,12,40,.85))}
 #app:not(.on-title) .title{opacity:0;visibility:hidden;pointer-events:none}
 .t-head{text-align:center;position:relative;z-index:2}
-.t-kicker{font-weight:700;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:var(--gold)}
-.title h1{font:700 46px/1.05 "Fredoka";margin-top:8px;letter-spacing:1px;background:linear-gradient(180deg,#fff,#f6d9ff 60%,#f2a7c8);-webkit-background-clip:text;background-clip:text;color:transparent;
-  filter:drop-shadow(0 4px 14px rgba(40,10,60,.55))}
-.t-sub{margin-top:8px;font-weight:600;font-size:16px;color:#f3e8ff;opacity:.95;text-shadow:0 1px 2px rgba(30,8,45,.85),0 0 10px rgba(40,10,60,.7)}
-.t-sprite{position:absolute;left:0;width:100%;top:calc(var(--st) + 150px);height:calc(100% - var(--st) - var(--sb) - 350px);object-fit:contain;object-position:center bottom;animation:float 5s ease-in-out infinite;
+.title h1{font:700 46px/1.05 "Fredoka";margin-top:0;letter-spacing:1px;text-transform:uppercase;background:linear-gradient(180deg,#fff,#f6d9ff 60%,#f2a7c8);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 2px rgba(30,8,45,.8)) drop-shadow(0 4px 14px rgba(40,10,60,.7))}
+.t-sub{margin-top:8px;font-weight:600;font-size:16px;color:#f3e8ff;text-shadow:0 1px 2px rgba(30,8,45,.9),0 0 10px rgba(40,10,60,.8)}
+.t-sprite{position:absolute;left:0;width:100%;top:calc(var(--st) + 126px);height:calc(100% - var(--st) - var(--sb) - 300px);object-fit:contain;object-position:center bottom;animation:float 5s ease-in-out infinite;
   -webkit-mask-image:linear-gradient(180deg,#000 80%,transparent 98%);mask-image:linear-gradient(180deg,#000 80%,transparent 98%);
   filter:drop-shadow(0 0 1.2px rgba(40,20,60,.9)) drop-shadow(0 16px 30px rgba(30,10,40,.5))}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.t-menu{margin-top:auto;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:2}
-.t-ver{margin-top:12px;font-size:12px;opacity:.6;position:relative;z-index:2}
+.t-menu{margin-top:auto;width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:2}
+.t-ver{margin-top:14px;font-size:12px;opacity:.6;position:relative;z-index:2}
 .pill{min-height:52px;width:100%;border-radius:30px;background:rgba(255,255,255,.88);color:#3b2c55;font-weight:800;font-size:17px;box-shadow:0 6px 16px rgba(30,10,50,.28);border:1.5px solid rgba(255,255,255,.9);transition:transform .12s}
 .pill:active{transform:scale(.97)}
 .pill:disabled{opacity:1;background:rgba(40,30,70,.6);color:rgba(255,255,255,.45);border-color:rgba(255,255,255,.18);box-shadow:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -212,7 +211,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
   .title{padding-top:calc(var(--st) + 14px);align-items:flex-start;padding-left:calc(32px + var(--sl))}
   .t-head{text-align:left}.title h1{font-size:36px}
   .t-sprite{left:auto;right:4%;width:45%;top:calc(var(--st) + 6px);height:calc(100% - var(--st) - 6px);animation:none}
-  .t-menu{max-width:300px;gap:8px}.t-menu .pill{min-height:44px;font-size:16px}
+  .t-menu{max-width:300px;gap:10px}.t-menu .pill{min-height:44px;font-size:16px}
   .t-ver{display:none}
   .sheet{left:50%;right:auto;width:min(560px,92%);transform:translate(-50%,105%)}
   .open .sheet{transform:translate(-50%,0)}

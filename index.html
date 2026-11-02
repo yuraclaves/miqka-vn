@@ -26,6 +26,8 @@
 <link rel="icon" href="assets/icons/icon-192.png">
 <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/lightcone.css">
+<link rel="stylesheet" href="css/miqka.css">
 </head>
 <body>
 <div id="app" class="on-title">
@@ -65,16 +67,15 @@
 
   <!-- ===== ÉCRAN TITRE ===== -->
   <section class="title" id="title">
+    <div class="banner" id="banner"></div>
     <div class="t-head">
-      <div class="t-kicker">Un visual novel</div>
       <h1 id="gameTitle">Miqka City</h1>
       <div class="t-sub" id="gameSub">Vraie ou fausse richesse ?</div>
     </div>
-    <img class="t-sprite" src="assets/sprites/excited.png" alt="">
+    <div class="mq" id="miqka" aria-label="Miqka"></div>
     <div class="t-menu">
       <button class="pill primary" id="tNew">Nouvelle partie</button>
       <button class="pill" id="tCont">Continuer</button>
-      <button class="pill" id="tLoad">Chargement</button>
       <button class="pill" id="tSet">Réglages</button>
     </div>
     <div class="t-ver">v0.1 · démo de l'interface</div>
@@ -121,5 +122,8 @@
 </div>
 <script src="story.js"></script>
 <script src="js/engine.js"></script>
+<script src="js/lightcone.js"></script>
+<script>window.MIQKA_DIR="assets/sprites/title/";</script>
+<script src="js/miqka.js"></script>
 </body>
 </html>

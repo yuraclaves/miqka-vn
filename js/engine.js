@@ -201,8 +201,8 @@ function goTitle(skipConfirm){
     setMusic(S.titleMusic || null); app.classList.add("on-title"); app.classList.remove("ui-hidden"); refreshTitle(); };
   if(skipConfirm === true) go(); else confirmBox("Retourner à l'écran titre ? La progression non sauvegardée sera perdue (la sauvegarde auto reste).", go);
 }
-function refreshTitle(){ const sv = store.get("saves", {}); $("tCont").disabled = !sv.auto;
-  $("tLoad").disabled = !Object.keys(sv).some(k=>sv[k]); }
+function savedKeys(){ const sv = store.get("saves", {}); return Object.keys(sv).filter(k=>sv[k]); }
+function refreshTitle(){ $("tCont").disabled = !savedKeys().length; }   // « Continuer » actif dès qu'une sauvegarde existe
 
 /* ---------- Sauvegardes ---------- */
 const SLOTS = 6;
@@ -331,8 +331,8 @@ $("shMenu").querySelectorAll("[data-act]").forEach(b=> b.onclick = ()=>{
   if(a==="title") goTitle();
 });
 $("tNew").onclick = ()=>{ ac(); const sv = store.get("saves", {}); sv.auto ? confirmBox("Commencer une nouvelle partie ? (Tes sauvegardes restent disponibles.)", startGame) : startGame(); };
-$("tCont").onclick = ()=>{ ac(); loadFrom("auto"); };
-$("tLoad").onclick = ()=>{ ac(); openSaves("load"); };
+// « Continuer » : une seule sauvegarde → on la charge directement ; plusieurs → liste des emplacements en mode chargement
+$("tCont").onclick = ()=>{ ac(); const ks = savedKeys(); if(!ks.length) return; ks.length === 1 ? loadFrom(ks[0]) : openSaves("load"); };
 $("tSet").onclick = ()=>{ ac(); previewType(); openSheet("shSet"); };
 
 function hideUI(on){ app.classList.toggle("ui-hidden", on); if(on){ clearTimeout(autoTimer); } else if(autoOn && !typing && !waitingChoice) autoTimer = setTimeout(advance, 800); }

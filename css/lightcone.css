@@ -1,0 +1,52 @@
+/* ====== Bannière diagonale « cônes de lumière » — Miqka City ======
+   Cartes portrait ornementales (inspirées des Light Cones de Honkai: Star Rail, dessin original CSS/SVG, aucun asset officiel).
+   Animation : transform uniquement (1 calque par rangée + le reflet holographique de chaque carte).
+   Ombre et lueur sont des éléments statiques (pas de filter sur un parent animé). */
+.banner{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#21183d,#0f0b1e 75%);z-index:0;pointer-events:none;contain:strict}
+.b-rot{position:absolute;left:50%;top:50%;width:var(--bw,1200px);height:var(--bw,1200px);
+  transform:translate(-50%,-50%) rotate(-18deg);display:flex;flex-direction:column;justify-content:center;gap:var(--gap,16px)}
+.b-row{position:relative;height:var(--th,170px);flex:none;overflow:visible}
+.b-track{position:absolute;left:0;top:0;height:100%;display:flex;gap:var(--gap,16px);will-change:transform;
+  animation:b-slide var(--dur,60s) linear infinite;animation-delay:var(--delay,0s)}
+.b-row.rev .b-track{animation-direction:reverse}
+@keyframes b-slide{from{transform:translate3d(0,0,0)}to{transform:translate3d(var(--shift),0,0)}}
+
+/* --- carte --- */
+.lc{--cut:calc(var(--th) * .06);position:relative;flex:none;height:100%;width:calc(var(--th) * .72)}
+.lc .bev{clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% var(--cut),100% calc(100% - var(--cut)),
+  calc(100% - var(--cut)) 100%,var(--cut) 100%,0 calc(100% - var(--cut)),0 var(--cut))}
+/* lueur derrière la carte (couleur selon la rangée : or / argent-lilas) */
+.lc-glow{position:absolute;inset:-14% -22%;background:radial-gradient(closest-side,var(--glow,rgba(255,214,140,.30)),transparent);z-index:0}
+.b-row.rev .lc{--glow:rgba(190,170,255,.28)}
+/* ombre portée : forme biseautée floutée, statique */
+.lc-shd{position:absolute;inset:0;transform:translate(5px,10px);filter:blur(7px);z-index:0}
+.lc-shd>i{position:absolute;inset:0;background:rgba(4,2,12,.65)}
+/* corps métallique (= cadre extérieur) */
+.lc-body{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(150deg,#fff6dc 0%,#d9b979 18%,#8d6a3c 38%,#f3dfae 55%,#a8834c 72%,#fff0c8 88%,#b99256 100%)}
+.b-row.rev .lc-body{background:linear-gradient(150deg,#ffffff 0%,#c9c6dc 18%,#6f6a8c 38%,#e9e6f6 55%,#8d88a8 72%,#ffffff 88%,#a29dbb 100%)}
+/* fenêtre de l'illustration (verre) */
+.lc-art{position:absolute;inset:3.2% 4.4%;--cut:calc(var(--th) * .045);background:#140f26;overflow:hidden}
+.lc-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* vernis : reflet fixe haut-gauche + vignettage + teinte holographique légère */
+.lc-art:before{content:"";position:absolute;inset:0;z-index:2;
+  background:linear-gradient(140deg,rgba(255,255,255,.32) 0%,rgba(255,255,255,.06) 24%,rgba(255,255,255,0) 42%),
+             linear-gradient(200deg,rgba(255,120,220,.10),rgba(120,220,255,.08) 50%,rgba(255,236,150,.10)),
+             radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(10,6,24,.45) 100%)}
+/* reflet holographique qui balaie la carte (transform seulement) */
+.lc-art:after{content:"";position:absolute;top:-25%;bottom:-25%;left:0;width:60%;z-index:3;
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,150,230,.20) 30%,rgba(255,255,255,.55) 48%,rgba(140,230,255,.25) 60%,rgba(255,240,170,.18) 72%,rgba(255,255,255,0));
+  transform:translate3d(-170%,0,0) skewX(-18deg);animation:lc-shine var(--sd,9s) ease-in-out infinite;animation-delay:var(--sdl,0s)}
+@keyframes lc-shine{0%{transform:translate3d(-170%,0,0) skewX(-18deg)}24%,100%{transform:translate3d(260%,0,0) skewX(-18deg)}}
+/* filets, coins ornés et étoiles (SVG partagé) */
+.lc-frame{position:absolute;inset:0;width:100%;height:100%;z-index:4;overflow:visible}
+
+/* assombrissement pour la lisibilité */
+.b-dim{position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse 90% 60% at 50% 42%,rgba(18,10,36,.18),rgba(10,6,22,.58) 100%),
+             linear-gradient(180deg,rgba(16,10,34,.64) 0%,rgba(16,10,34,.40) 26%,rgba(16,10,34,.36) 52%,rgba(12,8,28,.78) 74%,rgba(10,6,22,.92) 100%)}
+.b-paused .b-track,.b-paused .lc-art:after{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.b-track,.lc-art:after{animation:none!important}}
+
+/* jeu : bandeau visible seulement sur l'écran titre -> animations suspendues en jeu */
+#app:not(.on-title) .b-track,#app:not(.on-title) .lc-art:after{animation-play-state:paused}
