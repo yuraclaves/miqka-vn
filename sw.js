@@ -1,6 +1,6 @@
 /* Service worker : met le jeu en cache pour qu'il marche hors ligne.
    ⚠ Change VERSION à chaque mise à jour de ton histoire, sinon l'iPhone garde l'ancienne. */
-const VERSION = "vn-v10";
+const VERSION = "vn-v11";
 const FILES = [
   "./", "index.html", "story.js", "story-hires.js", "story-hires2.js", "story-tomo.js","js/cloud.js", "js/daynight.js", "js/engine.js", "css/style.css", "manifest.json",
   "assets/fonts/Nunito.ttf", "assets/fonts/Nunito-Italic.ttf", "assets/fonts/Fredoka.ttf",
@@ -21,8 +21,9 @@ self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c 
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", e => {
   if (e.request.method !== "GET") return;
+  if (e.request.url.indexOf("/assets/music/") >= 0) return;   /* musique : flux réseau (requêtes Range), cache HTTP du navigateur */
   e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(hit => hit || fetch(e.request).then(res => {
-    if (res.ok && new URL(e.request.url).origin === location.origin) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(e.request, copy)); }
+    if (res.status === 200 && new URL(e.request.url).origin === location.origin) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(e.request, copy)); }
     return res;
   }).catch(() => caches.match("index.html"))));
 });
