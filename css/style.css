@@ -263,7 +263,14 @@ input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;bac
 @keyframes sFlash{0%{opacity:.85}100%{opacity:0}}
 @media (orientation:landscape) and (max-height:520px){
   .duo{top:calc(var(--st) + 4px);bottom:0;--dh:94%;--under:0px}
+  /* v9 : hauteur / remontée propres au paysage (lh, ly) : bustes remontés pour ne pas passer sous la boîte, tête jamais coupée */
+  .dslot img{height:calc(var(--dh) * var(--lh,1));bottom:calc(var(--ly,0) * 1%)}
   .dslot.L{--cx:calc(16% + var(--sl))}.dslot.R{--cx:calc(84% - var(--sr))}
   #app.duo-on .lower,#app.duo-on .bar{left:50%;right:auto;width:min(52%,600px);transform:translateX(-50%)}
   #app.duo-on .choices{left:0;right:0;width:auto;bottom:calc(100% + 10px)}
 }
+
+/* v9 : « Pas encore lu » — petite étiquette discrète au-dessus de la boîte de dialogue */
+.unread{position:absolute;left:50%;top:-12px;padding:3px 10px;border-radius:10px;font-size:12px;font-weight:600;letter-spacing:.02em;color:#e9e1ff;
+  background:rgba(20,14,40,.82);border:1px solid rgba(255,255,255,.18);opacity:0;transform:translate(-50%,4px);transition:opacity .25s ease,transform .25s ease;pointer-events:none;z-index:4}
+.unread.on{opacity:.92;transform:translate(-50%,0)}

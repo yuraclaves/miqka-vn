@@ -437,3 +437,27 @@
 .dn-lights i.beacon{width:2.4%}
 @keyframes dnFl{0%,100%{scale:1}47%{scale:1}50%{scale:.82}53%{scale:1}}
 @media (prefers-reduced-motion:reduce){.dn *,.dn-moon{animation:none!important}.dn-sea i{opacity:.35}}
+
+/* ====== v9 : onglet Miqka « monopolisant » sur ordinateur et en paysage ======
+   Ordinateur : l'onglet Miqka quitte le cadre de téléphone et occupe toute la fenêtre (photo plein écran).
+   Écran large (paysage / PC) : Miqka remplit la hauteur disponible, centrée ; statut en haut à gauche, astuce en bas à gauche,
+   halo / effets / textes proportionnés à la hauteur (unités cqh), rien de coupé. */
+#app{transition:width .35s ease,height .35s ease,border-radius .35s ease}
+@media (min-width:700px) and (min-height:640px){
+  #app.mode-city:has(.city[data-tab=miqka]:not([data-view=journal])){width:100vw;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
+  .city[data-tab=miqka]:not([data-view=journal]) .c-top>*{max-width:600px;margin-left:auto;margin-right:auto}
+}
+.c-pane[data-p=miqka]{container-type:size;container-name:mkp}
+@container mkp (min-aspect-ratio: 1/1){
+  .mk-sq{left:0;right:0;top:max(8px,1.2cqh);bottom:calc(var(--sb) + max(40px,6cqh))}
+  .mk-halo{width:min(74cqw,96cqh);top:51%}
+  .mk-st{left:calc(14px + var(--sl));top:max(10px,1.6cqh);transform:none;max-width:min(30cqw,340px);text-align:left;font-size:clamp(13px,2.3cqh,22px);padding:.4em 1em;border-radius:.9em}
+  .mk-st.new{animation:st-new-l .7s cubic-bezier(.3,1.6,.5,1)}
+  .mk-hint{left:calc(14px + var(--sl));right:auto;max-width:min(30cqw,360px);text-align:left;bottom:calc(var(--sb) + max(12px,2cqh));font-size:clamp(12.5px,2.2cqh,21px)}
+  .mk-p{font-size:clamp(26px,4.6cqh,52px)}
+  .mk-s{font-size:clamp(22px,3.6cqh,40px)}
+  .mk-c{width:clamp(22px,3.6cqh,42px);height:clamp(22px,3.6cqh,42px)}
+  .rain-i{width:clamp(26px,4.4cqh,52px)}
+  .tm-tab{font-size:clamp(12.5px,1.8cqh,17px);padding:.5em 1.6em calc(.5em + var(--sb))}
+}
+@keyframes st-new-l{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}

@@ -119,6 +119,13 @@ ST.scenes.hire_x = { duo:true, chapter:"Embauche", title:"X — Métier", backgr
 - Les embauches se font dans l'ordre de la liste (l'histoire se suit).
 - Sprites et fonds d'une scène ne sont chargés qu'à son lancement.
 
+## 7b. vn-v9 — lot 2 des embauches + début plus rapide
+- `story-hires2.js` : scènes longues de Chiaki, Rin, Topaz, Bakool Ja Ja, Zenos, Aventurine, Fandaniel, Sinbad (textes originaux écrits pour ce jeu ; la ville = `{ville}`).
+- Pose : `lh` (hauteur en paysage) et `ly` (décalage bas en paysage, en %) en plus de `h/ax/lift`.
+- « Passer » sur une réplique jamais lue : petit badge « Pas encore lu ».
+- Économie : bonus de clic dégressif (×1,6 → ×1 sur les 8000 premiers KC), premiers employés moins chers et plus rentables ; milieu/fin ≈ v8.
+- Onglet Miqka : plein écran sur PC, mise en page adaptée en paysage (container queries).
+
 ## 8. Cycle jour/nuit (onglet Ville)
 
 `js/daynight.js` : **horloge de jeu de 10 minutes réelles** (aube ≈ 1 min, jour ≈ 3,5 min, couchant ≈ 1,5 min, nuit ≈ 3 min), calée sur l'heure de l'appareil, donc identique après rechargement. Choisie plutôt que l'heure réelle pour que le joueur voie la ville changer pendant une partie ; aucun réglage nécessaire.

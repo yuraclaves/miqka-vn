@@ -75,7 +75,7 @@ function duoSet(side, who){ const slot = $("d"+side), im = $("d"+side+"i");
   if(!who){ im.classList.remove("on"); return; }
   const d = poseDef(who.c, who.p); if(!d){ im.classList.remove("on"); return; }
   im.classList.remove("on");
-  const show = ()=>{ im.style.setProperty("--h", d.h||1); im.style.setProperty("--ax", d.ax==null?.5:d.ax); im.style.setProperty("--lift", d.lift||0); im.style.setProperty("--y", d.y||0);
+  const show = ()=>{ im.style.setProperty("--h", d.h||1); im.style.setProperty("--ax", d.ax==null?.5:d.ax); im.style.setProperty("--lift", d.lift||0); im.style.setProperty("--y", d.y||0); im.style.setProperty("--lh", d.lh||d.h||1); im.style.setProperty("--ly", d.ly==null?(d.lift?6:0):d.ly);
     im.classList.toggle("flip", !!d.flip); im.classList.add("on"); };
   if(im.getAttribute("src") === d.src) show(); else { im.onload = show; im.src = d.src; }
 }
@@ -204,7 +204,7 @@ function lineDone(noArrow, wasRead){
   if(!noArrow && !waitingChoice) $("next").classList.add("on");
   if(skipOn && !waitingChoice){
     if(wasRead || cfg.skipUnread) skipTimer = setTimeout(advance, 70);
-    else setSkip(false);
+    else { setSkip(false); unreadHint(); }   /* v9 : arrêt sur une réplique jamais lue → petit « Pas encore lu » discret */
   } else if(autoOn && !waitingChoice){ autoTimer = setTimeout(advance, autoDelay(full.length)); }
 }
 function advance(){
@@ -262,7 +262,7 @@ function setAuto(on){ autoOn = on; $("btnAuto").classList.toggle("on", on);
   if(on){ setSkip(false); if(!typing && playing && !waitingChoice && !busy) autoTimer = setTimeout(advance, 600); } else clearTimeout(autoTimer); }
 function setSkip(on){ skipOn = on; $("btnSkip").classList.toggle("on", on); clearTimeout(skipTimer);
   if(on){ autoOn && setAuto(false); if(waitingChoice){ setSkip(false); return; }
-    if(!read.has(lineKey()) && !cfg.skipUnread){ toast("Rien de déjà lu à passer"); skipOn = false; $("btnSkip").classList.remove("on"); return; }
+    if(!read.has(lineKey()) && !cfg.skipUnread){ unreadHint(); skipOn = false; $("btnSkip").classList.remove("on"); return; }
     advance(); } }
 
 /* ---------- Partie / Titre ---------- */
@@ -367,6 +367,9 @@ let confirmCb = null;
 function confirmBox(msg, cb){ $("mText").textContent = msg; confirmCb = cb; $("modal").classList.add("on"); }
 $("mYes").onclick = ()=>{ $("modal").classList.remove("on"); const c = confirmCb; confirmCb = null; c && c(); };
 $("mNo").onclick = ()=>{ $("modal").classList.remove("on"); confirmCb = null; };
+/* v9 : indication discrète (au lieu d'un toast) quand « Passer » s'arrête ou est refusé sur une réplique pas encore lue */
+function unreadHint(){ let u = $("unread"); if(!u){ u = document.createElement("span"); u.id = "unread"; u.className = "unread"; u.setAttribute("aria-live","polite"); u.textContent = "Pas encore lu"; $("box").appendChild(u); }
+  u.classList.remove("on"); void u.offsetWidth; u.classList.add("on"); clearTimeout(unreadHint.t); unreadHint.t = setTimeout(()=>u.classList.remove("on"), 1600); }
 function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("on"), 1800); }
 
 /* ---------- Réglages UI ---------- */

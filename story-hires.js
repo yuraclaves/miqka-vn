@@ -13,7 +13,7 @@ const C = ST.characters, B = ST.backgrounds;
 /* Sprites : chargés uniquement à l'ouverture de la séquence (moteur), jamais avant l'embauche.
    h = hauteur relative à Miqka, ax = point d'ancrage horizontal (0-1), lift = 1 pour un buste (remonté au-dessus de la boîte de dialogue) */
 C.hancock  = {name:"Hancock",  poses:{buste:{src:"assets/chars/hancock.webp", h:.6, ax:.5, lift:1}}};
-C.bigjim   = {name:"Big Jim",  poses:{neutre:{src:"assets/chars/bigjim.webp", h:.47, ax:.47, lift:1}}};
+C.bigjim   = {name:"Big Jim",  poses:{neutre:{src:"assets/chars/bigjim.webp", h:.78, ax:.5, lift:1, lh:.8, ly:8}}};   /* v9 : plan taille officiel (épisode 1x01), tête entière + air au-dessus */
 C.estinien = {name:"Estinien", poses:{garde:{src:"assets/chars/estinien.webp", h:1.34, ax:.27}}};
 C.homer    = {name:"Homer",    poses:{calme:{src:"assets/chars/homer.webp", h:.96, ax:.5}, joie:{src:"assets/chars/homer_joie.webp", h:.7, ax:.5, lift:1}}};
 Object.assign(B, {
