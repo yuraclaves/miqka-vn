@@ -30,7 +30,7 @@ window.STORY = {
     bigjim: {"name": "Big Jim", "poses": {"buste": "assets/ville/bigjim.webp"}},
     sinbad: {"name": "Sinbad", "poses": {"buste": "assets/ville/sinbad.webp"}},
     rin: {"name": "Rin", "poses": {"buste": "assets/ville/rin.webp"}},
-    bakool: {"name": "Bakul Jaja", "poses": {"buste": "assets/ville/bakool.webp"}},
+    bakool: {"name": "Bakool Jaja", "poses": {"buste": "assets/ville/bakool.webp"}},
     aventurine: {"name": "Aventurine", "poses": {"buste": "assets/ville/aventurine.webp"}},
     fandaniel: {"name": "Fandaniel", "poses": {"buste": "assets/ville/fandaniel.webp"}}
   },
@@ -40,7 +40,7 @@ window.STORY = {
     toit: "assets/bg/toit.svg",     // toit au coucher du soleil
     rue:  "assets/bg/rue.svg",      // rue de nuit
     cafe: "assets/bg/cafe.svg",     // intérieur de café
-    ville: "assets/ville/city.webp" // Tuliyollal (capture officielle FINAL FANTASY XIV © SQUARE ENIX), décor des séquences d'embauche
+    ville: "assets/ville/city.webp" // Limsa Lominsa (capture officielle FINAL FANTASY XIV © SQUARE ENIX), décor des séquences d'embauche
   },
 
   /* --- Musiques (facultatif) : nom -> fichier audio ---
@@ -74,7 +74,7 @@ window.STORY = {
         {
           "speaker": "miqka",
           "pose": "idea",
-          "text": "[Exemple] Parfait : Garde de Miqka City ! Payé en Mikua Coin."
+          "text": "[Exemple] Parfait : Garde de Miqka City ! Payé en Kwak Coin."
         },
         {
           "speaker": "estinien",
@@ -393,7 +393,7 @@ window.STORY = {
 
     embauche_bakool: {
       "chapter": "Embauche",
-      "title": "Bakul Jaja — Chef de tribu",
+      "title": "Bakool Jaja — Chef de tribu",
       "background": "ville",
       "lines": [
         {
@@ -404,7 +404,7 @@ window.STORY = {
         {
           "speaker": "bakool",
           "pose": "buste",
-          "text": "[Exemple] Nous sommes Bakul Jaja ! Deux têtes, double prestige, double appétit !",
+          "text": "[Exemple] Nous sommes Bakool Jaja ! Deux têtes, double prestige, double appétit !",
           "effect": "bounce"
         },
         {
@@ -425,7 +425,7 @@ window.STORY = {
         {
           "speaker": "bakool",
           "pose": "buste",
-          "text": "[Exemple] Ça nous suffit ! Gloire à Bakul Jaja !"
+          "text": "[Exemple] Ça nous suffit ! Gloire à Bakool Jaja !"
         },
         {
           "end": true
@@ -457,7 +457,7 @@ window.STORY = {
         {
           "speaker": "aventurine",
           "pose": "buste",
-          "text": "[Exemple] Et si je double tes Mikua Coin à pile ou face ?"
+          "text": "[Exemple] Et si je double tes Kwak Coin à pile ou face ?"
         },
         {
           "speaker": "miqka",

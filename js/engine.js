@@ -342,7 +342,7 @@ $("shMenu").querySelectorAll("[data-act]").forEach(b=> b.onclick = ()=>{
   if(a==="leave" && seqEnd) endSeq(false);
 });
 $("tNew").onclick = ()=>{ ac(); if(!window.CITY) return startGame();
-  CITY.hasSave() ? confirmBox("Commencer une nouvelle partie ? Ta ville actuelle (Mikua Coin, employés, séquences vues) sera remise à zéro.", ()=>CITY.newGame()) : CITY.newGame(); };
+  CITY.hasSave() ? confirmBox("Commencer une nouvelle partie ? Ta ville actuelle (Kwak Coin, employés, séquences vues) sera remise à zéro.", ()=>CITY.newGame()) : CITY.newGame(); };
 // « Continuer » : une seule sauvegarde → on la charge directement ; plusieurs → liste des emplacements en mode chargement
 $("tCont").onclick = ()=>{ ac(); if(window.CITY && CITY.hasSave()) CITY.resume(); };
 $("tSet").onclick = ()=>{ ac(); previewType(); openSheet("shSet"); };
