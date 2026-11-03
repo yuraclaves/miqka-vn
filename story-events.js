@@ -22,7 +22,7 @@ const E = P("eden"), T = P("tropi"), RB = P("robin"), RT = P("ratio"), RD = P("r
 const BJ = P("bigjim"), HK = P("hancock");
 
 /* ---------------- EDEN — LA FILLE D'AVANT ---------------- */
-ST.scenes.ev_eden2 = { duo:true, chapter:"Événement", title:"Eden — La fille d'avant", background:"toit", music:"comique", lines:[
+ST.scenes.ev_eden2 = { duo:true, chapter:"Événement", title:"Flashback d'Eden", background:"toit", music:"comique", lines:[
   N("Sur le toit de {ville}. Plateau de Crousty. Eden se tait. Quatre secondes. Record mondial.", {right:"idea", left:"eden:neutre"}),
   M("idea", "Eden ? Tu es muette ? Tu as parié ta voix ? Tu as avalé un Crousty trop sérieux ?"),
   E("neutre", "Je charge une anecdote. Ça rame. Le fichier est lourd.", {effect:"nod"}),
@@ -115,7 +115,7 @@ ST.scenes.ev_eden2 = { duo:true, chapter:"Événement", title:"Eden — La fille
 ]};
 
 /* ---------------- TROPI — LE GARÇON DU FOND ---------------- */
-ST.scenes.ev_tropi2 = { duo:true, chapter:"Événement", title:"Tropi — Le garçon du fond", background:"bar", music:"comique", lines:[
+ST.scenes.ev_tropi2 = { duo:true, chapter:"Événement", title:"Flashback de Tropi", background:"bar", music:"comique", lines:[
   N("Le bar de {ville}. Pas de quiz. Tropi est au fond, dos au mur. Eden a déjà proposé trois jeux. Trois non.", {right:"idea", left:"tropi:neutre"}),
   E("neutre", "Mode lapin-mur activé. Miqka, ça se soigne avec un Crousty ou une question.", {left:"eden:neutre"}),
   M("sweet", "Tropi. Tu veux le silence, ou une histoire ? On peut faire les deux. Mal, mais les deux."),
@@ -219,7 +219,7 @@ ST.scenes.ev_tropi2 = { duo:true, chapter:"Événement", title:"Tropi — Le gar
 ]};
 
 ST.events = (ST.events || []).filter(function(ev){ return ev.id!=="ev_eden" && ev.id!=="ev_tropi" && ev.id!=="ev_eden2" && ev.id!=="ev_tropi2"; }).concat([
-  {id:"ev_eden2", scene:"ev_eden2", title:"Eden — La fille d'avant", who:"eden"},
-  {id:"ev_tropi2", scene:"ev_tropi2", title:"Tropi — Le garçon du fond", who:"tropi"}
+  {id:"ev_eden2", scene:"ev_eden2", title:"Flashback d'Eden", who:"eden"},
+  {id:"ev_tropi2", scene:"ev_tropi2", title:"Flashback de Tropi", who:"tropi"}
 ]);
 })();
