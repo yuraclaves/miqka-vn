@@ -75,14 +75,28 @@ function getImg(id){
     return (r&&r.save&&r.save.miqka_builder_img)||"";
   });
 }
+function storyText(st){
+  return (st.lines||[]).some(function(ln){
+    if(ln.kind==="choice") return (ln.options||[]).some(function(o){ return (o.text||"").trim(); });
+    return !!(ln.text||"").trim();
+  });
+}
+function isBlank(st){ return !(st.title||"").trim() && !storyText(st); }
+function isPublic(st){ return !!(st&&st.pub&&(st.title||"").trim()&&storyText(st)); }
+function dropBlanks(){
+  var n=(DOC.stories||[]).length;
+  DOC.stories=(DOC.stories||[]).filter(function(st){ return !isBlank(st); });
+  if(DOC.stories.length!==n){ if(!DOC.stories.length) DOC.dirty=false; saveLocal(); }
+}
 function putDoc(){
   var ids=[], seen={};
   function addRef(s){ if(String(s||"").indexOf("img:")===0){ var id=s.slice(4); if(id&&!seen[id]){ seen[id]=1; ids.push(id); } } }
-  DOC.stories.forEach(function(st){
+  var list=(DOC.stories||[]).filter(isPublic);
+  list.forEach(function(st){
     addRef(st.bg); addRef(st.banner);
     (st.lines||[]).forEach(function(ln){ if(ln.img) addRef("img:"+ln.img); addRef(ln.bg); });
   });
-  var cat={v:1,rev:Date.now(),stories:DOC.stories,imageIds:ids};
+  var cat={v:1,rev:Date.now(),stories:list,imageIds:ids};
   return slotHash("").then(function(h){
     return rpc("miqka_put",{h:h,s:{miqka_builder_doc:JSON.stringify(cat)},p:Math.floor(Date.now()/1000),force:true});
   }).then(function(){ DOC.rev=cat.rev; DOC.dirty=false; ids.forEach(function(id){ DOC.sent[id]=1; }); saveLocal(); });
@@ -100,6 +114,7 @@ function loadRemote(){
     })).then(function(pairs){
       var images={}, sent={};
       pairs.forEach(function(p){ if(p[1]){ images[p[0]]=p[1]; sent[p[0]]=1; } });
+      (cat.stories||[]).forEach(function(st){ st.pub=true; });
       DOC={rev:cat.rev||0,dirty:false,stories:cat.stories,images:images,sent:sent};
       saveLocal(); applyAll();
       var city=document.getElementById("city"), box=document.getElementById("journal");
@@ -115,8 +130,9 @@ function resolveBg(bg){
 }
 function applyAll(){
   var ST=window.STORY; if(!ST||!ST.scenes) return;
+  Object.keys(ST.scenes).forEach(function(k){ if(k.indexOf("b_")===0) delete ST.scenes[k]; });
   ST.scenes.b__fin={lines:[{end:true}]};
-  (DOC.stories||[]).forEach(function(st){
+  (DOC.stories||[]).filter(isPublic).forEach(function(st){
     var lines=[], sceneBg="";
     (st.lines||[]).forEach(function(ln){
       var bg=resolveBg(ln.bg||st.bg||"");
@@ -176,9 +192,10 @@ function play(id){
   });
 }
 function journal(box){
-  if(!DOC.stories.length) return;
+  var list=(DOC.stories||[]).filter(isPublic);
+  if(!list.length) return;
   var head=el("p","jr-intro"); head.textContent="Histoires ajoutées"; box.appendChild(head);
-  DOC.stories.forEach(function(st){
+  list.forEach(function(st){
     var b=el("button","jr"); b.type="button"; b.setAttribute("data-bstory","1");
     var t=el("span","jr-t"), nm=el("b"); nm.textContent=st.title||"Sans titre";
     var sm=el("small"); sm.textContent="Histoire ajoutée · tout le monde peut la jouer";
@@ -494,10 +511,11 @@ function openEvents(){
     ev.querySelector("#evX").onclick=function(){ ev.hidden=true; };
   }
   var list=document.getElementById("evList"); list.textContent="";
-  if(!DOC.stories.length){
-    var n=el("p","bd-lead"); n.textContent="Pas encore d'histoire ici. Tu peux en écrire dans Réglages.";
+  var stories=(DOC.stories||[]).filter(isPublic);
+  if(!stories.length){
+    var n=el("p","bd-lead"); n.textContent="Pas encore d'histoire ici. Quand tu en mets une en ligne, elle apparaît pour tout le monde.";
     list.appendChild(n);
-  } else DOC.stories.forEach(function(st, i){ list.appendChild(ribbonButton(st, i, false)); });
+  } else stories.forEach(function(st, i){ list.appendChild(ribbonButton(st, i, false)); });
   ev.hidden=false;
 }
 
@@ -578,6 +596,7 @@ function valid(st, err){
 function publish(st, btn, err){
   if(busy) return;
   if(!valid(st, err)) return;
+  st.pub=true;
   busy=true; btn.disabled=true; btn.textContent="Envoi…";
   var ids=[], seen={};
   function add(id){ if(id&&DOC.images[id]&&!seen[id]){ seen[id]=1; ids.push(id); } }
@@ -595,8 +614,9 @@ function publish(st, btn, err){
   chain.then(function(){ return putDoc(); }).then(function(){
     applyAll();
     btn.textContent="C'est en ligne";
-    err.textContent="C'est en ligne. Dans la ville, touche Évén. au-dessus de Big Jim. S'ils avaient déjà le jeu ouvert, ils ferment et rouvrent la page.";
+    err.textContent="C'est en ligne pour tout le monde. Dans la ville, touche Évén. au-dessus de Big Jim. S'ils avaient déjà le jeu ouvert, ils ferment et rouvrent la page.";
   }).catch(function(){
+    st.pub=false;
     err.textContent="Pas de réseau. Ton texte reste sur cet appareil. Réessaie.";
     btn.textContent="Mettre en ligne";
   }).then(function(){ busy=false; btn.disabled=false; });
@@ -615,7 +635,7 @@ function mount(){
   r.appendChild(b); sb.insertBefore(r, sb.firstChild);
   b.onclick=function(){ view="lock"; openUI(); };
 }
-shell(); mount(); loadLocal(); applyAll();
+shell(); mount(); loadLocal(); dropBlanks(); applyAll();
 window.BUILDER={journal:journal, openEvents:openEvents};
 loadRemote();
 setInterval(function(){ if(!DOC.dirty) loadRemote(); }, 60000);
