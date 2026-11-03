@@ -265,7 +265,12 @@ function townList(){ /* v10 : UN seul buste par personnage engagé, quel que soi
 function head(c,cls){ var h=el("i","hd "+(cls||"")); h.style.backgroundImage="url("+IMG+"av/"+c.id+".webp)"; return h; }
 function renderTown(){ var pop=$("townPop"); pop.textContent=""; var L=townList(), tot=0; CH.forEach(function(c){ tot+=n(c.id); });
   L.forEach(function(c,i){ var s=SPOTS[i], w=el("div","tp"); w.style.left=s[0]+"%"; w.style.top=s[1]+"%"; w.style.setProperty("--d",(-(i*0.37)%2.2).toFixed(2)+"s");
-    var h=head(c); w.appendChild(h); var lb=el("span","tp-n"); lb.textContent=c.name; w.appendChild(lb); pop.appendChild(w); });
+    var h=head(c); w.appendChild(h); var lb=el("span","tp-n"); lb.textContent=c.name; w.appendChild(lb);
+    if(c.id==="bigjim" && !S.tuto){ w.classList.add("has-ev"); var ev=el("button","ev-logo"); ev.type="button"; ev.setAttribute("aria-label","Événements");
+      ev.innerHTML='<i class="hk-shine"></i><b>Évén.</b>';
+      ev.onclick=function(e){ e.stopPropagation(); if(window.BUILDER&&BUILDER.openEvents) BUILDER.openEvents(); };
+      w.appendChild(ev); }
+    pop.appendChild(w); });
   /* v10 : Miqka et ses Tomodachi rencontrés (bustes) ; « ! » au-dessus des persos d'une petite histoire disponible */
   var own=TOMO.filter(tomoOwned);
   if(own.length && !S.tuto){ var av=msAvail(), who=av?["miqka"].concat(av.need):[], G=[["miqka",MQ+"excited.webp","Miqka",[64,70]]];
