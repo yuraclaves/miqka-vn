@@ -71,6 +71,7 @@
     window.__bannerRows=[];for(var r2=0;r2<rows;r2++)window.__bannerRows.push(rowOrder(r2).join(', '));
   }
   var el=document.getElementById('banner'); if(el) build(el);
-  var to; addEventListener('resize',function(){clearTimeout(to);to=setTimeout(function(){
-    var d=document.querySelector('.b-dim'); if(d) d.remove(); build(el);},200);});
+  var to, lastW=0, lastH=0; addEventListener('resize',function(){clearTimeout(to);to=setTimeout(function(){
+    if(!el) return; var w=el.clientWidth, h=el.clientHeight; if(Math.abs(w-lastW)<12 && Math.abs(h-lastH)<12) return; lastW=w; lastH=h;
+    var d=document.querySelector('.b-dim'); if(d) d.remove(); build(el);},250);});
 })();

@@ -15,19 +15,23 @@ function prog(b){ try{ var c=JSON.parse(b["miqka_city.v1"]||"null"); if(!c) retu
 function sha(s){ var d=new TextEncoder().encode("miqka-city:"+s); return crypto.subtle.digest("SHA-256",d).then(function(b){ return Array.prototype.map.call(new Uint8Array(b),function(x){ return ("0"+x.toString(16)).slice(-2); }).join(""); }); }
 function rpc(fn,body,keep){ return fetch(API+fn,{method:"POST",keepalive:!!keep,headers:{"apikey":PK,"Authorization":"Bearer "+PK,"Content-Type":"application/json"},body:JSON.stringify(body)})
   .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }); }
-function adopt(save){ /* remplace les clés locales par la sauvegarde distante, puis recharge (le plus sûr pour tout l'état du jeu) */
+function adopt(save){ /* remplace les clés locales par la sauvegarde distante, puis recharge une seule fois (jamais en boucle) */
+  var stamp="";
+  try{ stamp=(hash||"")+"|"+Math.round((prog(save)||0)*100); }catch(e){}
   try{ Object.keys(bundle()).forEach(function(k){ localStorage.removeItem(k); }); Object.keys(save||{}).forEach(function(k){ if(k.indexOf(PFX)===0 && typeof save[k]==="string") localStorage.setItem(k,save[k]); }); }catch(e){}
+  try{ if(sessionStorage.getItem("mqAdopt")===stamp) return; sessionStorage.setItem("mqAdopt", stamp); }catch(e){}
   ls("miqkacode.msg","Sauvegarde du code récupérée"); location.reload(); }
+function ahead(remoteP, localP){ return (+remoteP||0) > (+localP||0)+0.05; }
 function push(keep){ if(!hash||OFF) return Promise.resolve(); var b=bundle(), s=JSON.stringify(b); if(s===last && !ls(FK)) return Promise.resolve();
   if(!navigator.onLine) return Promise.resolve(); if(busy && !keep) return Promise.resolve(); busy=true; var force=!!ls(FK);
   return rpc("miqka_put",{h:hash,s:b,p:prog(b),force:force},keep).then(function(r){ busy=false; if(r&&r.ok){ last=s; if(force) ls(FK,null); }
-      else if(r && r.progress>prog(b)) return rpc("miqka_get",{h:hash}).then(function(g){ if(g&&g.save&&g.progress>prog(bundle())) adopt(g.save); }); })
+      else if(r && ahead(r.progress, prog(b))) return rpc("miqka_get",{h:hash}).then(function(g){ if(g&&g.save&&ahead(g.progress, prog(bundle()))) adopt(g.save); }); })
     .catch(function(){ busy=false; }); }
 function sched(){ if(timer) return; timer=setTimeout(function(){ timer=0; push(false); },2500); }
 /* attache un code : si le serveur a plus avancé → on le récupère, sinon la partie locale est envoyée sous ce code */
 function attach(c){ return sha(c).then(function(h){ code=c; hash=h; ls(CK,c); last=""; setUI();
   if(!navigator.onLine) return "off";
-  return rpc("miqka_get",{h:h}).then(function(g){ var b=bundle(); if(g && g.save && g.progress>prog(b)){ adopt(g.save); return "adopt"; } return push(false).then(function(){ return "push"; }); })
+  return rpc("miqka_get",{h:h}).then(function(g){ var b=bundle(); if(g && g.save && ahead(g.progress, prog(b))){ adopt(g.save); return "adopt"; } return push(false).then(function(){ return "push"; }); })
     .catch(function(){ return "err"; }); }); }
 /* fenêtre du code (au premier lancement, ou « Changer de code » dans les Réglages) */
 function ask(cancelable){
@@ -35,7 +39,7 @@ function ask(cancelable){
   d.innerHTML='<form class="cc-card" novalidate><b id="ccT">Ton code de sauvegarde</b><p class="cc-sub">Choisis un code (4 caractères min., ex. MIQKA). Le même code sur un autre appareil y ramène ta partie. Garde-le pour toi : quiconque a le code a la partie.</p>'+
     '<input id="ccIn" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" placeholder="MIQKA" aria-label="Code de sauvegarde"><p class="cc-err" id="ccErr" aria-live="polite"></p>'+
     '<div class="cc-row">'+(cancelable?'<button type="button" class="pill" id="ccNo">Annuler</button>':'')+'<button type="submit" class="pill primary" id="ccOk">Continuer</button></div></form>';
-  document.body.appendChild(d); var i=d.querySelector("#ccIn"), er=d.querySelector("#ccErr"); if(code) i.value=code; setTimeout(function(){ i.focus(); },50);
+  document.body.appendChild(d); var i=d.querySelector("#ccIn"), er=d.querySelector("#ccErr"); if(code) i.value=code; setTimeout(function(){ try{ if(!window.matchMedia||!matchMedia("(pointer:coarse)").matches) i.focus(); }catch(e){} },50);
   if(cancelable) d.querySelector("#ccNo").onclick=function(){ d.remove(); };
   d.querySelector("form").onsubmit=function(e){ e.preventDefault(); var c=norm(i.value); if(c.length<4){ er.textContent="4 caractères minimum."; return; }
     if(!(window.crypto&&crypto.subtle)){ er.textContent="Navigateur trop ancien pour la sauvegarde par code."; return; }
