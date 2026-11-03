@@ -17,10 +17,11 @@ var LOOK={
   homer:{th:"donut",anim:"bounce"}, chiaki:{th:"pixel",anim:"steps"}, rin:{th:"pitch",anim:"kick"},
   topaz:{th:"ipc",anim:"twinkle"}, bakool:{th:"tural",anim:"stomp"}, zenos:{th:"garlean",anim:"pulse"},
   aventurine:{th:"casino",anim:"chip"}, fandaniel:{th:"ember",anim:"flicker"}, sinbad:{th:"sea",anim:"wave"},
-  hancock:{th:"casino",anim:"chip"}, eden:{th:"ipc",anim:"float"}, tropi:{th:"sea",anim:"wave"}
+  hancock:{th:"casino",anim:"chip"}, eden:{th:"ipc",anim:"float"}, tropi:{th:"sea",anim:"wave"},
+  robin:{th:"sea",anim:"float"}, ratio:{th:"ipc",anim:"pulse"}, raiden:{th:"garlean",anim:"pulse"}, nier:{th:"drg",anim:"sway"}
 };
 var POSE_LABEL={excited:"Contente",idea:"Une idée",pointing:"Elle montre",shy:"Timide",sweet:"Douce",neutre:"Normale",buste:"Portrait",garde:"En garde",calme:"Calme",joie:"Joie",pense:"Elle réfléchit",dodo:"Endormie",serieuse:"Sérieuse",serieuse:"Sérieuse"};
-var SAY={miqka:"hop",bigjim:"nod",estinien:"lean",homer:"bounce",chiaki:"squish",rin:"jump",topaz:"hop",bakool:"shake",zenos:"shake",aventurine:"nod",fandaniel:"shake",sinbad:"lean",hancock:"nod",eden:"bounce",tropi:"nod"};
+var SAY={miqka:"hop",bigjim:"nod",estinien:"lean",homer:"bounce",chiaki:"squish",rin:"jump",topaz:"hop",bakool:"shake",zenos:"shake",aventurine:"nod",fandaniel:"shake",sinbad:"lean",hancock:"nod",eden:"bounce",tropi:"nod",robin:"nod",ratio:"lean",raiden:"nod",nier:"nod"};
 var FALLBACK=[{th:"dome",anim:"sway"},{th:"drg",anim:"float"},{th:"donut",anim:"bounce"},{th:"sea",anim:"wave"},{th:"casino",anim:"chip"},{th:"ember",anim:"flicker"}];
 
 function el(tag, cls){ var n=document.createElement(tag); if(cls) n.className=cls; return n; }
@@ -194,7 +195,14 @@ function markNews(id){
 function freshNews(){
   var seen={};
   seenNews().forEach(function(id){ seen[id]=1; });
-  return (DOC.stories||[]).filter(isPublic).filter(function(st){ return st.id && !seen[st.id]; });
+  var pubs=(DOC.stories||[]).filter(isPublic).filter(function(st){ return st.id && !seen[st.id]; });
+  var extras=[];
+  var evs=(window.STORY&&STORY.events)||[];
+  evs.forEach(function(ev){
+    if(!ev||!ev.id||seen[ev.id]) return;
+    extras.push({id:ev.id, title:ev.title, _scene:ev.scene, _builtin:true, lines:[{who:ev.who, pose:"neutre", text:"."}]});
+  });
+  return {pubs:pubs, extras:extras, all:pubs.concat(extras)};
 }
 function inTuto(){
   try{ return !!(window.CITY && CITY.state && CITY.state().tuto); }catch(e){ return false; }
@@ -202,9 +210,9 @@ function inTuto(){
 function showNews(){
   var pane=document.querySelector('.c-pane[data-p="town"]');
   if(!pane) return;
-  var list=freshNews();
+  var pack=freshNews(), list=pack.all;
   if(!list.length || inTuto()){ if(newsEl) newsEl.hidden=true; return; }
-  var st=list[list.length-1];
+  var st=pack.pubs.length ? pack.pubs[pack.pubs.length-1] : pack.extras[0];
   if(!newsEl){
     newsEl=el("button","town-news");
     newsEl.type="button";
@@ -212,18 +220,35 @@ function showNews(){
     newsEl.onclick=function(e){
       var id=newsEl.getAttribute("data-id");
       if(e.target.closest && e.target.closest(".tn-x")){ e.preventDefault(); markNews(id); showNews(); return; }
-      if(id) play(id);
+      var scene=newsEl.getAttribute("data-scene");
+      if(scene) playSceneId(scene);
+      else if(id) play(id);
     };
     pane.appendChild(newsEl);
   }
   var same=newsEl.getAttribute("data-id")===st.id && !newsEl.hidden;
   newsEl.hidden=false;
   newsEl.setAttribute("data-id", st.id);
+  newsEl.setAttribute("data-scene", st._scene||"");
   newsEl.setAttribute("aria-label", "Nouvelle histoire : "+(st.title||"")+". Toucher pour la jouer.");
   newsEl.querySelector(".tn-kicker").textContent=list.length>1?"Nouvelles histoires":"Nouvelle histoire";
   newsEl.querySelector(".tn-title").textContent=st.title||"";
   newsEl.querySelector(".tn-go").textContent=list.length>1?"Touche pour jouer · encore "+(list.length-1)+" après":"Touche pour la jouer";
   if(!same){ newsEl.classList.remove("tn-pop"); void newsEl.offsetWidth; newsEl.classList.add("tn-pop"); }
+}
+function playSceneId(id){
+  if(!window.VN||!window.STORY||!STORY.scenes[id]) return;
+  markNews(id);
+  showNews();
+  var app=document.getElementById("app");
+  var backCity=app.classList.contains("mode-city");
+  closeUI();
+  if(ev) ev.hidden=true;
+  app.classList.remove("mode-city","on-title");
+  VN.playScene(id, function(){
+    if(backCity) app.classList.add("mode-city");
+    else VN.goTitle(true);
+  });
 }
 function play(id){
   applyAll();
@@ -241,6 +266,19 @@ function play(id){
   });
 }
 function journal(box){
+  var seen={};
+  seenNews().forEach(function(id){ seen[id]=1; });
+  ((window.STORY&&STORY.events)||[]).forEach(function(ev){
+    if(!seen[ev.id]) return;
+    var b=el("button","jr"); b.type="button"; b.setAttribute("data-bstory","1");
+    var t=el("span","jr-t"), nm=el("b"); nm.textContent=ev.title;
+    var sm=el("small"); sm.textContent="Événement · tout le monde peut le rejouer";
+    t.appendChild(nm); t.appendChild(sm);
+    var go=el("span","jr-go"); go.textContent="Rejouer ▶";
+    b.appendChild(t); b.appendChild(go);
+    b.onclick=function(){ playSceneId(ev.scene); };
+    box.appendChild(b);
+  });
   var list=(DOC.stories||[]).filter(isPublic);
   if(!list.length) return;
   var head=el("p","jr-intro"); head.textContent="Histoires ajoutées"; box.appendChild(head);
@@ -548,7 +586,7 @@ function ribbonButton(st, i, preview){
   var face=(ln.img&&DOC.images[ln.img])||(person?person.src(ln.pose):"");
   if(custom){ bg.classList.add("img"); bg.style.backgroundImage='url("'+custom.replace(/"/g,"%22")+'")'; }
   bust.src=face||custom||"assets/sprites/excited.png";
-  if(!preview) b.onclick=function(){ if(ev) ev.hidden=true; play(st.id); };
+  if(!preview) b.onclick=function(){ if(ev) ev.hidden=true; if(st._scene) playSceneId(st._scene); else play(st.id); };
   else b.style.pointerEvents="none";
   return b;
 }
@@ -561,10 +599,16 @@ function openEvents(){
   }
   var list=document.getElementById("evList"); list.textContent="";
   var stories=(DOC.stories||[]).filter(isPublic);
-  if(!stories.length){
+  var builtins=(window.STORY&&STORY.events)||[];
+  if(!stories.length && !builtins.length){
     var n=el("p","bd-lead"); n.textContent="Pas encore d'histoire ici. Quand tu en mets une en ligne, elle apparaît pour tout le monde.";
     list.appendChild(n);
-  } else stories.forEach(function(st, i){ list.appendChild(ribbonButton(st, i, false)); });
+  } else {
+    builtins.forEach(function(ev, i){
+      list.appendChild(ribbonButton({id:ev.id, title:ev.title, _scene:ev.scene, banner:"", lines:[{who:ev.who, pose:"neutre", text:"."}]}, i, false));
+    });
+    stories.forEach(function(st, i){ list.appendChild(ribbonButton(st, builtins.length+i, false)); });
+  }
   ev.hidden=false;
 }
 
