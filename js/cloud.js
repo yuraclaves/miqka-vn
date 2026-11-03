@@ -1,7 +1,8 @@
 /* Miqka City — sauvegarde par CODE (v10).
    Le joueur choisit un code (ex. MIQKA) ; on n'envoie au serveur qu'un hachage SHA-256 du code normalisé (majuscules, sans espaces autour, 4 caractères min.).
    Contenu synchronisé : toutes les clés localStorage « miqka_* » (Ville + VN + progression des scènes). localStorage reste la source ; envoi ~2,5 s après
-   un changement, à la fermeture / changement d'onglet et au retour du réseau. Conflit : on garde la sauvegarde la plus avancée (Kwak Coin gagnés au total). */
+   un changement, à la fermeture / changement d'onglet et au retour du réseau. Conflit : on garde la sauvegarde la plus avancée (Kwak Coin gagnés au total).
+   v15 : un écart minuscule de progression ne recharge plus la page en boucle. */
 (function(){
 "use strict";
 var API="https://ruuorgyqgtdgfpthanuq.supabase.co/rest/v1/rpc/", PK="sb_publishable_gS5NYQ6xyp-QsK5a1M3mZw_phtomiT0";
