@@ -1,0 +1,40 @@
+/* Mode création — gros boutons, lisible sans être développeur */
+.bd{position:fixed;inset:0;z-index:200;display:flex;justify-content:center;background:rgba(6,4,14,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.bd[hidden]{display:none}
+.bd-card{width:min(640px,100%);height:100%;display:flex;flex-direction:column;background:
+  radial-gradient(800px 320px at 0% 0%,rgba(142,111,208,.35),transparent 60%),
+  #120c22;color:#fff;box-shadow:0 20px 80px rgba(0,0,0,.45)}
+.bd-top{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px}
+.bd-top h2{flex:1;margin:0;font:800 22px/1.2 Nunito,sans-serif;text-align:center}
+.bd-x,.bd-back{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:12px;min-height:44px;padding:0 12px;font:700 15px Nunito,sans-serif}
+.bd-back[hidden]{display:none}
+.bd-body{flex:1;overflow:auto;padding:6px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
+.bd-lead{margin:0;color:rgba(255,255,255,.78);font-size:16px;line-height:1.4}
+.bd-field{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.bd-field span{font-size:14px;color:var(--gold,#ffd59a)}
+.bd input,.bd textarea,.bd select{width:100%;box-sizing:border-box;border-radius:14px;border:1px solid rgba(255,226,170,.28);background:rgba(255,255,255,.08);color:#fff;font:600 16px/1.4 Nunito,sans-serif;padding:12px 14px}
+.bd textarea{min-height:88px;resize:vertical}
+.bd input::placeholder,.bd textarea::placeholder{color:rgba(255,255,255,.4)}
+.bd select option{color:#1a1028}
+.bd-card .pill{flex:none}
+.bd-row{display:flex;gap:8px}
+.bd-row .pill{flex:1}
+.bd-note{margin:0;font-size:14px;color:rgba(255,255,255,.65);line-height:1.4}
+.bd-err{margin:0;color:#ffb3c4;font-weight:700;min-height:0}
+.bd-story,.bd-line{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.bd-story b{display:block;font-size:17px}
+.bd-story small{color:rgba(255,255,255,.6)}
+.bd-mini{display:flex;gap:8px}
+.bd-mini button{flex:1;min-height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;font:700 14px Nunito,sans-serif}
+.bd-chips{display:flex;flex-wrap:wrap;gap:8px}
+.bd-chips button{min-height:40px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;font:700 14px Nunito,sans-serif}
+.bd-chips button.on{background:linear-gradient(90deg,#8e6fd0,#c77dbb);border-color:transparent}
+.bd-photo{display:flex;align-items:center;gap:10px}
+.bd-photo img{width:64px;height:84px;object-fit:cover;border-radius:12px;background:#000}
+.bd-file{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,226,170,.35);background:rgba(255,213,154,.12);color:var(--gold,#ffd59a);font:700 14px Nunito,sans-serif}
+.bd-file input{position:absolute;inset:0;opacity:0}
+.bd-save{position:sticky;bottom:0;display:flex;flex-direction:column;gap:8px;padding-top:12px;background:linear-gradient(180deg,transparent,#120c22 28%)}
+@media (min-width:960px) and (min-height:640px){
+  .bd{align-items:center;padding:32px}
+  .bd-card{height:min(880px,calc(100% - 48px));border-radius:24px;border:1px solid rgba(255,226,170,.22);overflow:hidden}
+}

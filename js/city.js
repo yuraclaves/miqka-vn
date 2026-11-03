@@ -541,7 +541,8 @@ function renderJournal(){ var box=$("journal"); box.textContent=""; storyBtn();
   MS.forEach(function(m){ if(msRead(m)) JT.push([MQ+"excited.webp",m.t,"Petite histoire · palier "+fmt(m.n)+" KC/s",function(){ app.classList.remove("mode-city"); VN.playScene(m.id,function(){ app.classList.add("mode-city"); setMode("story"); }); }]); });
   JT.forEach(function(j){ var b=el("button","jr"), h=el("i","hd jr-hd"); h.style.backgroundImage='url("'+j[0]+'")'; b.appendChild(h);
     var t=el("span","jr-t"), nm=el("b"); nm.textContent=j[1]; var sm=el("small"); sm.textContent=j[2]; t.appendChild(nm); t.appendChild(sm); b.appendChild(t);
-    var go=el("span","jr-go"); go.textContent="Rejouer ▶"; b.appendChild(go); b.onclick=function(){ blip(640,.05); j[3](); }; box.appendChild(b); }); }
+    var go=el("span","jr-go"); go.textContent="Rejouer ▶"; b.appendChild(go); b.onclick=function(){ blip(640,.05); j[3](); }; box.appendChild(b); });
+  if(window.BUILDER&&BUILDER.journal) BUILDER.journal(box); }
 function head2(c){ if(seen(c.id)) return head(c,"jr-hd"); var h=el("i","hd jr-hd gray sil"); h.style.backgroundImage="url("+SIL+c.k+".webp)"; return h; }
 function toastMsg(m){ var t=$("toast"); if(!t) return; t.textContent=m; t.classList.add("on"); clearTimeout(toastMsg.t); toastMsg.t=setTimeout(function(){ t.classList.remove("on"); },1600); }
 

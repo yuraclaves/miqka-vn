@@ -1,6 +1,6 @@
 /* Service worker : met le jeu en cache pour qu'il marche hors ligne.
    ⚠ Change VERSION à chaque mise à jour de ton histoire, sinon l'iPhone garde l'ancienne. */
-const VERSION = "vn-v12";
+const VERSION = "vn-v13";
 const FILES = [
   "./", "index.html", "story.js", "story-hires.js", "story-hires2.js", "story-tomo.js","js/cloud.js", "js/daynight.js", "js/engine.js", "css/style.css", "manifest.json",
   "assets/fonts/Nunito.ttf", "assets/fonts/Nunito-Italic.ttf", "assets/fonts/Fredoka.ttf",
@@ -10,7 +10,7 @@ const FILES = [
   "css/lightcone.css", "css/miqka.css", "js/lightcone.js", "js/miqka.js",
   "assets/sprites/title/excited.webp", "assets/sprites/title/idea.webp", "assets/sprites/title/pointing.webp", "assets/sprites/title/shy.webp", "assets/sprites/title/sweet.webp",
   "assets/cones/aventurine.webp", "assets/cones/zenos.webp", "assets/cones/chiaki.webp", "assets/cones/bigjim.webp", "assets/cones/thancred.webp", "assets/cones/rin.webp", "assets/cones/topaz.webp", "assets/cones/fandaniel.webp", "assets/cones/oishi.webp", "assets/cones/homer.webp", "assets/cones/estinien.webp",
-  "css/city.css", "css/desktop.css", "js/wealth.js", "js/city.js", "assets/ville/city.webp",
+  "css/city.css", "css/desktop.css", "css/builder.css", "js/wealth.js", "js/city.js", "js/builder.js", "assets/ville/city.webp",
   /* persos de la Ville : seules les silhouettes neutres sont préchargées ; les images claires, avatars et fonds de bandeau ne sont téléchargés qu'après l'embauche (cache à la volée) */
   "assets/ville/sil/p1.webp", "assets/ville/sil/p2.webp", "assets/ville/sil/p3.webp", "assets/ville/sil/p4.webp", "assets/ville/sil/p5.webp", "assets/ville/sil/p6.webp", "assets/ville/sil/p7.webp", "assets/ville/sil/p8.webp", "assets/ville/sil/p9.webp", "assets/ville/sil/p10.webp", "assets/ville/sil/p11.webp",
   /* décors photo de l'onglet Miqka : seul le 1er palier est préchargé ; les suivants se chargent au fil de la progression (palier actuel + suivant) */
