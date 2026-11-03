@@ -177,10 +177,59 @@ function applyAll(){
     var top=resolveBg(st.bg)||sceneBg||"toit";
     ST.scenes["b_"+st.id]={duo:true, chapter:"Événement", title:st.title||"Sans titre", background:top, lines:lines};
   });
+  showNews();
+}
+var NEWSK="mqnews.v1", newsEl=null;
+function seenNews(){
+  try{ var a=JSON.parse(localStorage.getItem(NEWSK)||"[]"); return Array.isArray(a)?a:[]; }catch(e){ return []; }
+}
+function markNews(id){
+  if(!id) return;
+  var a=seenNews();
+  if(a.indexOf(id)>=0) return;
+  a.push(id);
+  if(a.length>60) a=a.slice(-60);
+  try{ localStorage.setItem(NEWSK, JSON.stringify(a)); }catch(e){}
+}
+function freshNews(){
+  var seen={};
+  seenNews().forEach(function(id){ seen[id]=1; });
+  return (DOC.stories||[]).filter(isPublic).filter(function(st){ return st.id && !seen[st.id]; });
+}
+function inTuto(){
+  try{ return !!(window.CITY && CITY.state && CITY.state().tuto); }catch(e){ return false; }
+}
+function showNews(){
+  var pane=document.querySelector('.c-pane[data-p="town"]');
+  if(!pane) return;
+  var list=freshNews();
+  if(!list.length || inTuto()){ if(newsEl) newsEl.hidden=true; return; }
+  var st=list[list.length-1];
+  if(!newsEl){
+    newsEl=el("button","town-news");
+    newsEl.type="button";
+    newsEl.innerHTML='<i class="hk-shine"></i><span class="tn-kicker"></span><b class="tn-title"></b><small class="tn-go"></small><span class="tn-x" role="button" aria-label="Fermer">×</span>';
+    newsEl.onclick=function(e){
+      var id=newsEl.getAttribute("data-id");
+      if(e.target.closest && e.target.closest(".tn-x")){ e.preventDefault(); markNews(id); showNews(); return; }
+      if(id) play(id);
+    };
+    pane.appendChild(newsEl);
+  }
+  var same=newsEl.getAttribute("data-id")===st.id && !newsEl.hidden;
+  newsEl.hidden=false;
+  newsEl.setAttribute("data-id", st.id);
+  newsEl.setAttribute("aria-label", "Nouvelle histoire : "+(st.title||"")+". Toucher pour la jouer.");
+  newsEl.querySelector(".tn-kicker").textContent=list.length>1?"Nouvelles histoires":"Nouvelle histoire";
+  newsEl.querySelector(".tn-title").textContent=st.title||"";
+  newsEl.querySelector(".tn-go").textContent=list.length>1?"Touche pour jouer · encore "+(list.length-1)+" après":"Touche pour la jouer";
+  if(!same){ newsEl.classList.remove("tn-pop"); void newsEl.offsetWidth; newsEl.classList.add("tn-pop"); }
 }
 function play(id){
   applyAll();
   if(!window.VN||!window.STORY||!STORY.scenes["b_"+id]) return;
+  markNews(id);
+  showNews();
   var app=document.getElementById("app");
   var backCity=app.classList.contains("mode-city");
   closeUI();
@@ -614,7 +663,7 @@ function publish(st, btn, err){
   chain.then(function(){ return putDoc(); }).then(function(){
     applyAll();
     btn.textContent="C'est en ligne";
-    err.textContent="C'est en ligne pour tout le monde. Dans la ville, touche Évén. au-dessus de Big Jim. S'ils avaient déjà le jeu ouvert, ils ferment et rouvrent la page.";
+    err.textContent="C'est en ligne pour tout le monde. Un bandeau apparaît dans la ville, avec le nom de l'histoire. S'ils avaient déjà le jeu ouvert, ils ferment et rouvrent la page.";
   }).catch(function(){
     st.pub=false;
     err.textContent="Pas de réseau. Ton texte reste sur cet appareil. Réessaie.";
@@ -639,4 +688,5 @@ shell(); mount(); loadLocal(); dropBlanks(); applyAll();
 window.BUILDER={journal:journal, openEvents:openEvents};
 loadRemote();
 setInterval(function(){ if(!DOC.dirty) loadRemote(); }, 60000);
+setInterval(showNews, 2000);
 })();
