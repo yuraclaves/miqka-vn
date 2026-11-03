@@ -1,6 +1,6 @@
 /* Service worker : met le jeu en cache pour qu'il marche hors ligne.
    ⚠ Change VERSION à chaque mise à jour de ton histoire, sinon l'iPhone garde l'ancienne. */
-const VERSION = "vn-v21";
+const VERSION = "vn-v22";
 const FILES = [
   "./", "index.html", "story.js", "story-hires.js", "story-hires2.js", "story-tomo.js", "story-events.js","js/cloud.js", "js/daynight.js", "js/engine.js", "css/style.css", "manifest.json",
   "assets/fonts/Nunito.ttf", "assets/fonts/Nunito-Italic.ttf", "assets/fonts/Fredoka.ttf",
